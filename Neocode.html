@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Neo-code</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+
+body{
+display:grid;
+grid-template-columns:200px 1fr 260px;
+grid-template-rows:60px 1fr 260px;
+height:100vh;
+background:#eaf6f2;
+color:#1f2d2b;
+gap:12px;
+padding:12px;
+}
+
+/* HEADER */
+.header{
+grid-column:1/4;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(90deg,#d1fae5,#dbeafe);
+border-radius:14px;
+padding:12px 16px;
+box-shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+
+.logo{
+width:42px;
+height:42px;
+background:url('logo.png') center/cover no-repeat ;
+border-radius:10px;
+}
+
+.titulo{
+font-size:22px;
+font-weight:700;
+color:#064e3b;
+margin-left:12px;
+}
+
+/* PANELES IZQUIERDO (ELEMENTOS) */
+.panel{
+background:#ecfdf5; /* verde suave */
+padding:14px;
+border-radius:14px;
+border:1px solid #bbf7d0;
+overflow:auto;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* PANEL DERECHO (PROPIEDADES) */
+.panel:nth-of-type(3){
+background:#eff6ff; /* azul suave */
+border:1px solid #bfdbfe;
+}
+
+/* TITULOS */
+h3{
+font-size:13px;
+margin:14px 0 10px;
+color:#047857;
+text-align:center;
+border-bottom:2px solid #a7f3d0;
+padding-bottom:6px;
+letter-spacing:1px;
+}
+
+/* BOTONES */
+button{
+width:100%;
+margin-bottom:8px;
+padding:8px;
+background:linear-gradient(135deg,#10b981,#059669);
+color:#fff;
+border:none;
+cursor:pointer;
+border-radius:8px;
+transition:.2s;
+font-weight:600;
+}
+
+button:hover{
+background:linear-gradient(135deg,#059669,#047857);
+transform:translateY(-1px);
+box-shadow:0 4px 10px rgba(16,185,129,0.25);
+}
+
+/* INPUTS */
+input,select{
+width:100%;
+margin-bottom:8px;
+border:1px solid #cbd5e1;
+border-radius:8px;
+padding:6px;
+background:#ffffff;
+color:#1e293b;
+transition:.15s;
+}
+
+input:focus,select:focus{
+outline:none;
+border-color:#3b82f6;
+box-shadow:0 0 0 2px rgba(59,130,246,0.25);
+}
+
+/* CANVAS */
+#canvas{
+background:#ffffff;
+position:relative;
+border-radius:14px;
+border:2px solid #94a3b8;
+box-shadow:inset 0 0 10px rgba(0,0,0,0.06);
+overflow:hidden;
+}
+
+/* CODIGO */
+#codigos{
+grid-column:1/4;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+pre{
+background:#0f172a; /* tipo editor */
+padding:16px;
+border-radius:12px;
+overflow:auto;
+font-size:14px;
+line-height:1.7;
+border:1px solid #1e293b;
+white-space:pre-wrap;
+}
+
+/* COLORES DEL CÓDIGO */
+#html{
+color:#34d399; /* verde */
+font-weight:500;
+}
+
+#css{
+color:#60a5fa; /* azul */
+font-weight:500;
+}
+
+/* ELEMENTOS */
+.el{
+position:absolute;
+min-width:40px;
+min-height:30px;
+cursor:move;
+padding:4px;
+}
+
+.el img{
+width:100%;
+height:100%;
+object-fit:cover;
+pointer-events:none;
+}
+
+.activo{
+outline:2px dashed #3b82f6;
+}
+
+/* RESIZER */
+.resizer{
+position:absolute;
+width:10px;
+height:10px;
+background:linear-gradient(135deg,#10b981,#3b82f6);
+right:-5px;
+bottom:-5px;
+cursor:se-resize;
+border-radius:3px;
+}
+
+/* SCROLL */
+::-webkit-scrollbar{
+width:8px;
+height:8px;
+}
+
+::-webkit-scrollbar-track{
+background:#e2e8f0;
+border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb{
+background:linear-gradient(180deg,#10b981,#3b82f6);
+border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+background:linear-gradient(180deg,#059669,#2563eb);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="logo"></div>
+<div class="titulo">Neo-code</div>
+</div>
+
+<div class="panel">
+<h3>ELEMENTOS</h3>
+<button onclick="crear('div')">▣ DIV</button>
+<button onclick="crear('h1')"> 🔠  H1</button>
+<button onclick="crear('p')"> 🅿  P</button>
+<button onclick="crear('img')">🖼 IMG</button>
+<button onclick="crear('section')">📝 SECTION</button>
+<button onclick="crear('article')">📖 ARTICLE</button>
+</div>
+
+<div id="canvas"></div>
+
+<div class="panel">
+<h3>Colores</h3>
+BG<input type="color" id="bg">
+Color<input type="color" id="color">
+
+<h3>Texto</h3>
+Align<select id="ta">
+<option value="left">left</option>
+<option value="center">center</option>
+<option value="right">right</option>
+<option value="justify">justify</option>
+</select>
+
+<h3>Tipografía</h3>
+Font Size<input type="range" min="10" max="80" id="fs">
+
+<h3>Bordes</h3>
+Border Width<input type="range" min="0" max="10" id="bw">
+Border Radius<input type="range" min="0" max="50" id="br">
+Border Color<input type="color" id="bc">
+Border Style<select id="bs">
+<option value="solid">solid</option>
+<option value="dashed">dashed</option>
+<option value="dotted">dotted</option>
+<option value="double">double</option>
+</select>
+
+<button onclick="eliminar()">Eliminar</button>
+</div>
+
+
+<div id="codigos">
+<pre id="html"></pre>
+<pre id="css"></pre>
+</div>
+
+<script>
+let estado={elementos:[]},activo=null,contador=0,imgCount=1;
+
+const imagenesPrueba=[
+ "https://picsum.photos/200/150?random=1",
+ "https://picsum.photos/200/150?random=2",
+ "https://picsum.photos/200/150?random=3",
+ "https://picsum.photos/200/150?random=4",
+ "https://picsum.photos/200/150?random=5",
+ "https://picsum.photos/200/150?random=6",
+ "https://picsum.photos/200/150?random=7",
+ "https://picsum.photos/200/150?random=8",
+ "https://picsum.photos/200/150?random=9",
+ "https://picsum.photos/200/150?random=10"
+];
+
+function crear(tipo){
+ let clase="c"+(++contador);
+
+ let obj={
+  clase,
+  tipo,
+  texto:(tipo=="h1"
+    ?"Ejemplo de título"
+    :tipo=="p"
+    ?"Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias maxime ullam iusto earum dignissimos ea beatae recusandae, qui iure, excepturi voluptas quidem dolorum! At, ab voluptatem vero officiis omnis, rerum."
+    :""),
+  estilos:{
+   top:50,left:50,width:200,height:120,
+   background:"#aef",color:"#033",
+   fs:16,ta:"left",
+   bw:1,br:4,bc:"#033",bs:"solid"
+  }
+ };
+
+ if(tipo=="img"){
+  obj.nombre="imagen"+(imgCount)+".png";
+  obj.src=imagenesPrueba[(imgCount-1)%imagenesPrueba.length];
+  imgCount++;
+ }
+
+ estado.elementos.push(obj);
+ render();
+}
+
+function render(){
+ canvas.innerHTML="";
+ estado.elementos.forEach(e=>{
+  let el=document.createElement("div"); // 🔥 contenedor SIEMPRE
+  el.className="el "+e.clase+(activo==e.clase?" activo":"");
+
+  if(e.tipo=="img"){
+   let img=document.createElement("img");
+   img.src=e.src;
+   el.appendChild(img);
+  }else if(["h1","p"].includes(e.tipo)){
+   let txt=document.createElement(e.tipo);
+   txt.textContent=e.texto;
+   txt.ondblclick=()=>{txt.contentEditable=true;txt.focus();};
+   txt.onblur=()=>{txt.contentEditable=false;e.texto=txt.textContent;generarCodigo();};
+   el.appendChild(txt);
+  }
+
+  aplicarEstilos(el,e);
+
+  el.onmousedown=dragStart;
+  el.onclick=ev=>{ev.stopPropagation();activo=e.clase;cargarProps();render();};
+
+  let r=document.createElement("div");
+  r.className="resizer";
+  r.onmousedown=resizeStart;
+  el.appendChild(r);
+
+  canvas.appendChild(el);
+ });
+
+ generarCodigo();
+}
+
+function aplicarEstilos(el,e){
+ let s=e.estilos;
+
+ el.style.top=s.top+"px";
+ el.style.left=s.left+"px";
+ el.style.width=s.width+"px";
+ el.style.height=s.height+"px";
+
+ if(!["h1","p"].includes(e.tipo)){
+  el.style.background=s.background;
+ }
+
+ if(e.tipo!="img"){
+  el.style.color=s.color;
+  el.style.fontSize=s.fs+"px";
+  el.style.textAlign=s.ta;
+ }
+
+ el.style.border=s.bw+"px "+s.bs+" "+s.bc;
+ el.style.borderRadius=s.br+"px";
+}
+
+function cargarProps(){
+ let e=estado.elementos.find(x=>x.clase==activo);
+ if(!e)return;
+
+ bg.value=e.estilos.background;
+ color.value=e.estilos.color;
+ fs.value=e.estilos.fs;
+ ta.value=e.estilos.ta;
+ bw.value=e.estilos.bw;
+ br.value=e.estilos.br;
+ bc.value=e.estilos.bc;
+ bs.value=e.estilos.bs;
+}
+
+document.querySelectorAll("input,select").forEach(i=>{
+ i.oninput=()=>{
+  let e=estado.elementos.find(x=>x.clase==activo);
+  if(!e)return;
+
+  e.estilos.background=bg.value;
+  e.estilos.color=color.value;
+  e.estilos.fs=+fs.value;
+  e.estilos.ta=ta.value;
+  e.estilos.bw=+bw.value;
+  e.estilos.br=+br.value;
+  e.estilos.bc=bc.value;
+  e.estilos.bs=bs.value;
+
+  render();
+ };
+});
+
+function eliminar(){
+ estado.elementos=estado.elementos.filter(e=>e.clase!=activo);
+ activo=null;
+ render();
+}
+
+canvas.onclick=()=>{activo=null;render();};
+
+/* DRAG */
+let offsetX,offsetY,dragging=null;
+
+function dragStart(e){
+ if(e.target.isContentEditable)return;
+ dragging=e.currentTarget.classList[1];
+ offsetX=e.offsetX;
+ offsetY=e.offsetY;
+ document.onmousemove=dragMove;
+ document.onmouseup=dragEnd;
+}
+
+function dragMove(e){
+ if(!dragging)return;
+ let obj=estado.elementos.find(x=>x.clase==dragging);
+ obj.estilos.left=e.pageX-canvas.offsetLeft-offsetX;
+ obj.estilos.top=e.pageY-canvas.offsetTop-offsetY;
+ render();
+}
+
+function dragEnd(){
+ dragging=null;
+ document.onmousemove=null;
+}
+
+/* RESIZE */
+let resizing=null,startX,startY,startW,startH;
+
+function resizeStart(e){
+ e.stopPropagation();
+ resizing=e.target.parentElement.classList[1];
+
+ let obj=estado.elementos.find(x=>x.clase==resizing);
+
+ startX=e.pageX;
+ startY=e.pageY;
+ startW=obj.estilos.width;
+ startH=obj.estilos.height;
+
+ document.onmousemove=resizeMove;
+ document.onmouseup=resizeEnd;
+}
+
+function resizeMove(e){
+ if(!resizing)return;
+
+ let obj=estado.elementos.find(x=>x.clase==resizing);
+
+ obj.estilos.width=Math.max(40,startW+(e.pageX-startX));
+ obj.estilos.height=Math.max(30,startH+(e.pageY-startY));
+
+ render();
+}
+
+function resizeEnd(){
+ resizing=null;
+ document.onmousemove=null;
+}
+
+/* CODIGO */
+function generarCodigo(){
+ let htmlCode="",cssCode="";
+
+ estado.elementos.forEach(e=>{
+  if(e.tipo=="img"){
+   htmlCode+=`<img class="${e.clase}" src="${e.nombre}">\n`;
+  }else{
+   htmlCode+=`<${e.tipo} class="${e.clase}">${e.texto}</${e.tipo}>\n`;
+  }
+
+  cssCode+=`.${e.clase}{\n`;
+  cssCode+=`  position:absolute;\n`;
+  cssCode+=`  top:${e.estilos.top}px;\n`;
+  cssCode+=`  left:${e.estilos.left}px;\n`;
+  cssCode+=`  width:${e.estilos.width}px;\n`;
+  cssCode+=`  height:${e.estilos.height}px;\n`;
+
+  if(!["h1","p"].includes(e.tipo)){
+   cssCode+=`  background:${e.estilos.background};\n`;
+  }
+
+  if(e.tipo!="img"){
+   cssCode+=`  color:${e.estilos.color};\n`;
+   cssCode+=`  font-size:${e.estilos.fs}px;\n`;
+   cssCode+=`  text-align:${e.estilos.ta};\n`;
+  }
+
+  cssCode+=`  border:${e.estilos.bw}px ${e.estilos.bs} ${e.estilos.bc};\n`;
+  cssCode+=`  border-radius:${e.estilos.br}px;\n`;
+  cssCode+=`}\n\n`;
+ });
+
+ html.textContent=htmlCode;
+ css.textContent=cssCode;
+}
+
+render();
+</script>
+
+</body>
+</html>

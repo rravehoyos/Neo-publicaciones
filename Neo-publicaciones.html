@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Neo-publicaciones</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+
+body{
+background:#eef7f2;
+color:#1f2937;
+height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+/* HEADER */
+.header{
+width:100%;
+height:90px;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+background:#dff5e6;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.logo{
+position:absolute;
+left:20px;
+width:85px;
+height:85px;
+background:url('logo.png') center/cover no-repeat;
+border-radius:12px;
+}
+
+.titulo{
+font-size:70px;
+font-weight:700;
+letter-spacing:2px;
+background:linear-gradient(90deg,#22c55e,#16a34a);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* CONTENEDOR CENTRADO */
+.wrapper{
+flex:1;
+width:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.container{
+width:1000px; /* 🔥 más compacto */
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+}
+
+/* CARD */
+.card{
+perspective:1000px;
+height:220px;
+}
+
+.inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.card:hover .inner{
+transform:rotateY(180deg);
+}
+
+/* CARAS */
+.face{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+backface-visibility:hidden;
+overflow:hidden;
+}
+
+/* FRENTE */
+.front{
+background:#ffffff;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.front img{
+width:200px;
+height:200px;
+}
+
+/* REVERSO */
+.back{
+background:linear-gradient(135deg,#bbf7d0,#4ade80);
+transform:rotateY(180deg);
+flex-direction:column;
+padding:10px;
+text-align:center;
+color:#064e3b;
+}
+
+.back h3{
+font-size:25px;
+margin-bottom:4px;
+}
+
+.back p{
+font-size:20px;
+}
+
+/* LINK */
+.card a{
+position:absolute;
+inset:0;
+z-index:3;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+    <div class="logo"></div>
+    <div class="titulo">NEO-PUBLICACIONES</div>
+</div>
+
+<div class="wrapper">
+    <div class="container">
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="Neocolor.png">
+                </div>
+                <div class="face back">
+                    <h3>Neo-Color</h3>
+                    <p>Accede a la herramienta más avanzada para crear y seleccionar paletas de colores.</p>
+                </div>
+                <a href="selector.html"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="neolienzo.png">
+                </div>
+                <div class="face back">
+                    <h3>Neo-Lienzo</h3>
+                    <p>La herramienta definitiva para guiarte en la creación y maquetación de espacios en tus sitios web.</p>
+                </div>
+                <a href="calificador.html"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="neocode.png">
+                </div>
+                <div class="face back">
+                    <h3>Neo-Code</h3>
+                    <p>Una herramienta interactiva diseñada para ayudarte a comprender desde cero las propiedades básicas de HTML y CSS.</p>
+                </div>
+                <a href="neocode.html"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1006/1006555.png">
+                </div>
+                <div class="face back">
+                    <h3>Entretenimiento</h3>
+                    <p>Contenido divertido</p>
+                </div>
+                <a href="#"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="https://cdn-icons-png.flaticon.com/512/906/906334.png">
+                </div>
+                <div class="face back">
+                    <h3>Dev</h3>
+                    <p>Recursos para programadores</p>
+                </div>
+                <a href="#"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png">
+                </div>
+                <div class="face back">
+                    <h3>Media</h3>
+                    <p>Contenido multimedia</p>
+                </div>
+                <a href="#"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+                </div>
+                <div class="face back">
+                    <h3>Comunidad</h3>
+                    <p>Foros y usuarios</p>
+                </div>
+                <a href="#"></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="inner">
+                <div class="face front">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png">
+                </div>
+                <div class="face back">
+                    <h3>Perfil</h3>
+                    <p>Configuraciones personales</p>
+                </div>
+                <a href="#"></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

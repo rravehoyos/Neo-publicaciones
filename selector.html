@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Neo-color</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+
+body.light{background:#f4f5f7;color:#111;}
+body.dark{background:#121826;color:#fff;}
+
+.wrapper{
+width:96%;
+height:94vh;
+margin:auto;
+margin-top:2vh;
+border-radius:20px;
+border:5px solid #269900;
+overflow:hidden;
+}
+
+.container{
+display:grid;
+grid-template-columns:500px 1fr 520px;
+grid-template-rows:120px 1fr;
+height:100%;
+}
+
+.header{
+grid-column:1/4;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:15px;
+font-size:60px;
+font-weight:bold;
+}
+
+.logo{width:100px;height:100px;}
+
+.left,.right{
+padding:25px;
+display:flex;
+align-items:center;
+}
+
+.card{
+width:100%;
+padding:25px;
+border-radius:16px;
+background:#fff;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+.dark .card{background:#1f2937;}
+
+button{
+width:100%;
+margin-top:12px;
+padding:14px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+background:#eee;
+transition:.2s;
+}
+.dark button{background:#374151;color:#fff;}
+button.active{background:#4d9900;color:#fff;}
+
+.preview{
+margin-top:20px;
+display:flex;
+height:50px;
+border-radius:10px;
+overflow:hidden;
+}
+
+.colorBox{
+flex:1;
+cursor:pointer;
+transition:.2s;
+}
+.colorBox:active{transform:scale(0.9);}
+
+.center{
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
+}
+canvas{width:90%;height:90%;}
+
+/* VISOR */
+.colorViewer{
+position:absolute;
+width:220px;
+height:220px;
+border-radius:20px;
+background:#fff;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:10px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+.dark .colorViewer{background:#1f2937;}
+
+.hexText{
+font-size:40px;
+font-weight:bold;
+background:white;
+color:black;
+padding:6px 12px;
+border-radius:8px;
+user-select:all;
+cursor:text;
+}
+
+.varGrid{display:grid;gap:30px;}
+.varRow{display:flex;height:80px;border-radius:8px;overflow:hidden;}
+
+.varColor{
+flex:1;
+cursor:pointer;
+transition:.2s;
+}
+.varColor:active{transform:scale(0.9);}
+</style>
+<link rel="icon" href="neocolor.png" sizes="192x192">
+</head>
+
+<body class="light">
+
+<div class="wrapper">
+<div class="container">
+
+<div class="header">
+<img src="logo.png" class="logo">
+Neo-ColorS
+</div>
+
+<div class="left">
+<div class="card">
+<h3 style="text-align:center;">Construye tu paleta</h3>
+
+<button onclick="setMode(2,this)">2 colores</button>
+<button onclick="setMode(3,this)">3 colores</button>
+<button onclick="setMode(4,this)" class="active">4 colores</button>
+
+<div class="preview" id="preview"></div>
+
+<button onclick="toggleTheme()">🌗 Cambiar tema</button>
+</div>
+</div>
+
+<div class="center">
+<canvas id="canvas"></canvas>
+
+<div class="colorViewer">
+<div id="viewerColor" style="width:120px;height:120px;border-radius:12px;background:#ff0000;"></div>
+<div class="hexText" id="viewerHex">#FF0000</div>
+</div>
+
+</div>
+
+<div class="right">
+<div class="card">
+<h3 style="text-align:center;margin-bottom: 1vw;">Variaciones</h3>
+<div class="varGrid" id="variations"></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+let w,h,cx,cy,r;
+let angle=0,smoothAngle=0,mode=4;
+let lastAngle=null;
+
+const SEGMENTS=12;
+const STEP=(Math.PI*2)/SEGMENTS;
+const OFFSET=-Math.PI/2;
+const INTERACTION_RADIUS_FACTOR=1.4;
+
+function resize(){
+canvas.width=canvas.clientWidth;
+canvas.height=canvas.clientHeight;
+w=canvas.width;h=canvas.height;
+cx=w/2;cy=h/2;
+r=Math.min(w,h)/2.3;
+drawFrame(angle);
+}
+window.addEventListener("resize",resize);
+resize();
+
+function drawWheel(){
+for(let i=0;i<SEGMENTS;i++){
+let start=i*STEP+OFFSET,end=start+STEP;
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.arc(cx,cy,r,start,end);
+ctx.closePath();
+let mid=start+STEP/2;
+let hue=((mid-OFFSET)*180/Math.PI)%360;
+ctx.fillStyle=`hsl(${hue},100%,50%)`;
+ctx.fill();
+}
+}
+
+function animate(){
+smoothAngle+=(angle-smoothAngle)*0.2;
+drawFrame(smoothAngle);
+requestAnimationFrame(animate);
+}
+
+function drawFrame(base){
+ctx.clearRect(0,0,w,h);
+drawWheel();
+
+let angles=getAngles(base);
+
+let pts=angles.map(a=>{
+a=(a%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a),a:a};
+});
+
+drawShape(pts);
+drawPoints(pts);
+
+updatePreview();
+updateVariations();
+}
+
+function snap(a){
+let i=Math.round((a-OFFSET)/STEP);
+return i*STEP+OFFSET+STEP/2;
+}
+
+function getHue(a){
+return ((a-OFFSET)*180/Math.PI)%360;
+}
+
+function getAngles(base){
+if(mode===2)return[base,base+Math.PI];
+if(mode===3)return[base,base+2*Math.PI/3,base+4*Math.PI/3];
+if(mode===4)return[base,base+Math.PI/2,base+Math.PI,base+3*Math.PI/2];
+}
+
+function drawShape(p){
+ctx.lineWidth=3;
+ctx.strokeStyle="#000";
+ctx.beginPath();
+ctx.moveTo(p[0].x,p[0].y);
+for(let i=1;i<p.length;i++)ctx.lineTo(p[i].x,p[i].y);
+if(p.length>2)ctx.closePath();
+ctx.stroke();
+}
+
+function drawPoints(p){
+p.forEach(pt=>{
+ctx.beginPath();
+ctx.arc(pt.x,pt.y,10,0,Math.PI*2);
+ctx.fillStyle=`hsl(${getHue(pt.a)},100%,50%)`;
+ctx.fill();
+ctx.stroke();
+});
+}
+
+function hslToHex(h,s,l){
+s/=100;l/=100;
+let c=(1-Math.abs(2*l-1))*s;
+let x=c*(1-Math.abs((h/60)%2-1));
+let m=l-c/2;
+let r=0,g=0,b=0;
+if(h<60){r=c;g=x}
+else if(h<120){r=x;g=c}
+else if(h<180){g=c;b=x}
+else if(h<240){g=x;b=c}
+else if(h<300){r=x;b=c}
+else{r=c;b=x}
+r=Math.round((r+m)*255);
+g=Math.round((g+m)*255);
+b=Math.round((b+m)*255);
+return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+/* visor */
+function setViewer(hex){
+let colorEl=document.getElementById("viewerColor");
+let hexEl=document.getElementById("viewerHex");
+
+colorEl.style.background=hex;
+hexEl.innerText=hex;
+
+/* copiar al hacer click */
+hexEl.onclick=()=>{
+if(navigator.clipboard){
+navigator.clipboard.writeText(hex);
+}else{
+let t=document.createElement("textarea");
+t.value=hex;
+document.body.appendChild(t);
+t.select();
+document.execCommand("copy");
+document.body.removeChild(t);
+}
+};
+}
+
+function updatePreview(){
+if(lastAngle===angle)return;
+
+let preview=document.getElementById("preview");
+preview.innerHTML="";
+
+getAngles(angle).forEach(a=>{
+let hex=hslToHex(getHue(a),100,50);
+
+let div=document.createElement("div");
+div.className="colorBox";
+div.style.background=hex;
+
+div.onclick=()=>setViewer(hex);
+
+preview.appendChild(div);
+});
+}
+
+function updateVariations(){
+if(lastAngle===angle)return;
+
+let cont=document.getElementById("variations");
+cont.innerHTML="";
+
+getAngles(angle).forEach(a=>{
+let h=getHue(a);
+
+let row=document.createElement("div");
+row.className="varRow";
+
+/* 🔥 MUCHAS MÁS VARIACIONES */
+let variants=[
+/* base */
+[h,100,50],
+
+/* sombras */
+[h,100,30],
+[h,100,20],
+
+/* luces */
+[h,100,70],
+[h,100,85],
+
+/* saturación */
+[h,70,50],
+[h,40,50],
+
+/* desplazamiento de tono */
+[(h+15)%360,100,50],
+[(h-15+360)%360,100,50]
+
+];
+
+variants.forEach(v=>{
+let hex=hslToHex(v[0],v[1],v[2]);
+
+let div=document.createElement("div");
+div.className="varColor";
+div.style.background=hex;
+
+/* sigue funcionando el visor */
+div.onclick=()=>setViewer(hex);
+
+row.appendChild(div);
+});
+
+cont.appendChild(row);
+});
+
+lastAngle=angle;
+}
+
+let dragging=false;
+
+canvas.addEventListener("mousedown",e=>{dragging=true;move(e);});
+canvas.addEventListener("mouseup",()=>dragging=false);
+canvas.addEventListener("mouseleave",()=>dragging=false);
+canvas.addEventListener("mousemove",e=>{if(dragging)move(e);});
+
+function move(e){
+let rect=canvas.getBoundingClientRect();
+let x=e.clientX-rect.left-cx;
+let y=e.clientY-rect.top-cy;
+let dist=Math.sqrt(x*x+y*y);
+if(dist<r*INTERACTION_RADIUS_FACTOR){
+angle=snap(Math.atan2(y,x));
+}
+}
+
+function setMode(m,btn){
+mode=m;
+document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+lastAngle=null;
+}
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+document.body.classList.toggle("light");
+}
+
+animate();
+</script>
+
+</body>
+</html>

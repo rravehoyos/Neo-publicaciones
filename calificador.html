@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Editor Layout PRO+</title>
+
+<style>
+/* ===== SCROLL PERSONALIZADO ===== */
+
+.tip{
+scrollbar-width:thin;
+scrollbar-color:#38bdf8 #020617;
+}
+
+/* Chrome, Edge, Safari */
+.tip::-webkit-scrollbar{
+width:8px;
+}
+
+.tip::-webkit-scrollbar-track{
+background:#020617;
+border-radius:10px;
+}
+
+.tip::-webkit-scrollbar-thumb{
+background:linear-gradient(180deg,#38bdf8,#2563eb);
+border-radius:10px;
+border:1px solid #0b1220;
+}
+
+.tip::-webkit-scrollbar-thumb:hover{
+background:linear-gradient(180deg,#60a5fa,#3b82f6);
+}
+
+/* ===== RESET ===== */
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+
+body{
+height:100vh;
+overflow:hidden;
+color:#fff;
+background:radial-gradient(circle at center,#020617,#000);
+}
+
+/* ===== LIENZO ===== */
+
+.screen{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:80%;
+height:75%;
+background:#020617;
+border:1px solid #1f2937;
+border-radius:12px;
+box-shadow:0 0 40px rgba(0,0,0,0.6);
+overflow:hidden;
+translate:-150px 0px;
+}
+
+.screen::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(255,255,255,0.3) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,0.3) 1px,transparent 1px);
+background-size:40px 40px;
+pointer-events:none;
+}
+
+/* ===== SEPARADOR ===== */
+
+
+
+/* ===== PANEL DERECHO ===== */
+
+.panel{
+position:absolute;
+right:10px;
+top:120px; /* ya integrado sin translate raro */
+width:300px;
+background:#0b1220;
+border:1px solid #1f2937;
+border-radius:12px;
+padding:12px;
+font-size:13px;
+box-shadow:0 0 25px rgba(0,0,0,0.4);
+}
+
+/* ===== DOCK (ABAJO DEL PANEL) ===== */
+
+.dock{
+position:absolute;
+right:10px;
+top:470px; /* debajo del panel */
+width:300px;
+height: 100px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+
+padding:10px;
+
+background:#0b1220;
+border:1px solid #1f2937;
+border-radius:12px;
+
+box-shadow:0 0 20px rgba(0,0,0,0.35);
+}
+
+/* botones */
+.dock button{
+border:none;
+background:#111827;
+color:#fff;
+font-size:40px;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.dock button:hover{
+background:#2563eb;
+}
+
+.score{
+color:#38bdf8;
+font-weight:600;
+}
+
+/* ===== BARRAS ===== */
+
+.bar{
+height:8px;
+background:#1f2937;
+border-radius:5px;
+margin:6px 0;
+}
+
+.bar div{
+height:100%;
+width:0%;
+background:#38bdf8;
+border-radius:5px;
+}
+
+/* ===== TEXTO ===== */
+
+.tip{
+margin-top:10px;
+padding:10px;
+background:#111827;
+border-radius:6px;
+font-size:12px;
+line-height:1.4;
+white-space:pre-line;
+}
+
+/* ===== METRICAS ===== */
+
+.metric{
+margin:4px 0;
+cursor:help;
+}
+
+/* ===== CAJAS ===== */
+
+.box{
+position:absolute;
+border:2px solid rgba(255,255,255,0.25);
+border-radius:6px;
+cursor:move;
+}
+
+.box.active{
+outline:2px dashed #38bdf8;
+}
+
+/* ===== RESIZE ===== */
+
+.resize{
+width:10px;
+height:10px;
+background:#fff;
+position:absolute;
+right:-5px;
+bottom:-5px;
+cursor:nwse-resize;
+}
+
+/* ===== HEADER ===== */
+
+.header{
+position:absolute;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:10px;
+z-index:10;
+}
+
+/* logo */
+.logo{
+width:80px;
+height:80px;
+}
+
+/* imagen logo */
+.logo img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:6px;
+display:block;
+}
+
+/* titulo */
+.header h1{
+font-size:60px;
+font-weight:600;
+letter-spacing:1px;
+color:#e2e8f0;
+text-shadow:0 0 10px rgba(56,189,248,0.4);
+}
+/* ================= RESPONSIVE ================= */
+
+/* pantallas medianas (laptops pequeñas / tablets) */
+@media (max-width:1200px){
+
+.screen{
+width:75%;
+height:70%;
+translate:-100px 0;
+}
+
+.panel{
+width:260px;
+top:110px;
+}
+
+.dock{
+width:260px;
+top:440px;
+height:90px;
+}
+
+.header h1{
+font-size:48px;
+}
+
+.logo{
+width:60px;
+height:60px;
+}
+
+}
+
+/* tablets verticales */
+@media (max-width:900px){
+
+.screen{
+width:70%;
+height:65%;
+translate:-60px 0;
+}
+
+.panel{
+width:220px;
+top:100px;
+right:5px;
+font-size:12px;
+}
+
+.dock{
+width:220px;
+top:400px;
+height:80px;
+}
+
+.dock button{
+font-size:28px;
+}
+
+.header h1{
+font-size:36px;
+}
+
+.logo{
+width:50px;
+height:50px;
+}
+
+}
+
+/* móviles grandes */
+@media (max-width:700px){
+
+/* ahora el layout cambia a vertical */
+
+.screen{
+width:90%;
+height:50%;
+top:45%;
+translate:0;
+}
+
+/* panel pasa abajo */
+.panel{
+position:absolute;
+top:auto;
+bottom:120px;
+left:50%;
+transform:translateX(-50%);
+width:90%;
+}
+
+/* dock debajo */
+.dock{
+position:absolute;
+top:auto;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+width:90%;
+height:70px;
+}
+
+/* header más compacto */
+.header{
+top:5px;
+}
+
+.header h1{
+font-size:28px;
+}
+
+.logo{
+width:40px;
+height:40px;
+}
+
+/* scroll más usable */
+.tip{
+max-height:120px;
+}
+
+}
+
+/* móviles pequeños */
+@media (max-width:480px){
+
+.screen{
+height:45%;
+}
+
+.header h1{
+font-size:22px;
+}
+
+.dock button{
+font-size:22px;
+padding:4px 6px;
+}
+
+.panel{
+font-size:11px;
+}
+
+.tip{
+max-height:100px;
+}
+
+}
+</style>
+<link rel="icon" href="neolienzo.png" sizes="192x192" rel="apple-touch-icon">
+</head>
+
+<body>
+<div class="header">
+	<div class="logo">
+		<img src="logo.png">
+	</div>
+	<h1>Neo-Lienzo</h1>
+</div>
+
+<div class="screen" id="screen"></div>
+<div class="separator"></div>
+
+<div class="panel">
+<h3>📊 Evaluación PRO+</h3>
+
+<div class="metric" title="Espacio libre vs ocupado en pantalla">
+Espacio
+</div>
+<div class="bar"><div id="b1"></div></div>
+
+<div class="metric" title="Distancia entre elementos (consistencia visual)">
+Márgenes
+</div>
+<div class="bar"><div id="b2"></div></div>
+
+<div class="metric" title="Si están alineados en filas o columnas">
+Alineación
+</div>
+<div class="bar"><div id="b3"></div></div>
+
+<div class="metric" title="Distribución visual del peso en pantalla">
+Balance
+</div>
+<div class="bar"><div id="b4"></div></div>
+
+<div class="metric" title="Si los elementos se superponen correctamente">
+Superposición
+</div>
+<div class="bar"><div id="b5"></div></div>
+
+<div style="margin-top:10px;">
+🎯 Nota: <b id="score2">--</b>/100
+</div>
+
+<div class="tip" id="tips">Crea elementos para comenzar...</div>
+</div>
+
+<div class="dock">
+<button onclick="crear()">➕</button>
+<button onclick="evaluar()">🔎</button>
+<button onclick="deleteActive()">🗑️</button>
+<div class="score" id="score">--</div>
+</div>
+
+<script>
+const actualizarDock=()=>{
+let panel=document.querySelector(".panel");
+let dock=document.querySelector(".dock");
+
+let rect=panel.getBoundingClientRect();
+
+dock.style.top=(rect.bottom+10)+"px";
+};
+
+const screen=document.getElementById("screen");
+const scoreUI=document.getElementById("score");
+const scoreUI2=document.getElementById("score2");
+
+const b1=document.getElementById("b1");
+const b2=document.getElementById("b2");
+const b3=document.getElementById("b3");
+const b4=document.getElementById("b4");
+const b5=document.getElementById("b5");
+
+const tips=document.getElementById("tips");
+
+let active=null;
+let dragging=false,resizing=false;
+let sx,sy,sl,st,sw,sh;
+
+/* ===== DRAG GLOBAL ===== */
+document.addEventListener("mousemove",e=>{
+if(dragging&&active){
+active.style.left=(sl+(e.clientX-sx))+"px";
+active.style.top=(st+(e.clientY-sy))+"px";
+}
+if(resizing&&active){
+active.style.width=Math.max(20,sw+(e.clientX-sx))+"px";
+active.style.height=Math.max(20,sh+(e.clientY-sy))+"px";
+}
+});
+
+document.addEventListener("mouseup",()=>{
+dragging=false;
+resizing=false;
+});
+
+/* ===== CREAR ===== */
+const crear=()=>{
+let d=document.createElement("div");
+d.className="box";
+d.style.width="100px";
+d.style.height="100px";
+d.style.left="50px";
+d.style.top="50px";
+d.style.background=`hsl(${Math.random()*360},70%,60%)`;
+
+let r=document.createElement("div");
+r.className="resize";
+d.appendChild(r);
+
+screen.appendChild(d);
+
+d.onmousedown=e=>{
+if(e.target.classList.contains("resize"))return;
+dragging=true;
+sx=e.clientX;sy=e.clientY;
+sl=d.offsetLeft;st=d.offsetTop;
+active=d;select(d);
+};
+
+r.onmousedown=e=>{
+e.stopPropagation();
+resizing=true;
+sx=e.clientX;sy=e.clientY;
+sw=d.offsetWidth;sh=d.offsetHeight;
+active=d;select(d);
+};
+};
+
+/* ===== SELECT ===== */
+const select=d=>{
+document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
+d.classList.add("active");
+active=d;
+};
+
+/* ===== DELETE ===== */
+const deleteActive=()=>{
+if(active){active.remove();active=null;}
+};
+
+document.addEventListener("keydown",e=>{
+if(e.key==="Delete")deleteActive();
+});
+
+/* ===== EVALUAR MEJORADO ===== */
+const evaluar=()=>{
+let boxes=[...document.querySelectorAll(".box")];
+if(!boxes.length)return;
+
+let W=screen.clientWidth,H=screen.clientHeight;
+let tol=50;
+let msg=[];
+
+/* ================= ESPACIO REAL ================= */
+
+/* proporción ocupado/vacío */
+let used=boxes.reduce((a,b)=>a+b.offsetWidth*b.offsetHeight,0);
+let empty=1-used/(W*H);
+
+/* distribución por zonas */
+let zonas=[0,0,0,0];
+
+boxes.forEach(b=>{
+let x=b.offsetLeft+b.offsetWidth/2;
+let y=b.offsetTop+b.offsetHeight/2;
+
+if(x<W/2 && y<H/2)zonas[0]++;
+else if(x>=W/2 && y<H/2)zonas[1]++;
+else if(x<W/2 && y>=H/2)zonas[2]++;
+else zonas[3]++;
+});
+
+let maxZ=Math.max(...zonas);
+let minZ=Math.min(...zonas);
+
+/* penalización por concentración */
+let dispersion=maxZ-minZ;
+
+/* score base por proporción */
+let spaceBase=
+empty<0.15?20:
+empty<0.35?28:
+empty<0.7?30:
+22;
+
+/* penalización por mala distribución */
+let penalDispersion=
+dispersion>=boxes.length*0.7?12:
+dispersion>=boxes.length*0.5?8:
+dispersion>=boxes.length*0.3?4:0;
+
+let scoreEspacio=Math.max(0,spaceBase-penalDispersion);
+
+/* consejos espacio */
+if(dispersion>=boxes.length*0.6)
+msg.push("🔴 El contenido está concentrado en una zona (como arriba). Distribuye mejor el espacio.");
+
+if(empty>0.8)
+msg.push("🟡 Demasiado espacio vacío sin uso.");
+
+if(empty<0.1)
+msg.push("🔴 Demasiado contenido, no hay respiración visual.");
+
+
+/* ================= MÁRGENES (AUTO DETECTADOS) ================= */
+
+let margins=[];
+
+boxes.forEach(b=>{
+margins.push(b.offsetLeft);
+margins.push(W-(b.offsetLeft+b.offsetWidth));
+margins.push(b.offsetTop);
+margins.push(H-(b.offsetTop+b.offsetHeight));
+});
+
+/* promedio */
+let avgM=margins.reduce((a,b)=>a+b,0)/margins.length;
+
+/* desviación */
+let diffM=margins.reduce((a,b)=>a+Math.abs(b-avgM),0)/margins.length;
+
+let scoreMargen=30;
+
+if(diffM>80){
+scoreMargen=18;
+msg.push("🟡 Márgenes inconsistentes entre elementos y bordes.");
+}
+if(avgM<20){
+scoreMargen-=5;
+msg.push("🔴 Elementos pegados al borde del lienzo.");
+}
+
+
+/* ================= ALINEACIÓN ================= */
+
+let align=0;
+
+for(let i=0;i<boxes.length;i++){
+for(let j=i+1;j<boxes.length;j++){
+
+let dx=Math.abs(boxes[i].offsetLeft-boxes[j].offsetLeft);
+let dy=Math.abs(boxes[i].offsetTop-boxes[j].offsetTop);
+
+if(dx<tol||dy<tol)align++;
+}}
+
+let scoreAlineacion=Math.min(20,align*2);
+
+if(scoreAlineacion<8)
+msg.push("🔴 No hay alineación clara. Crea filas o columnas.");
+if(scoreAlineacion>15)
+msg.push("🟢 Buena alineación estructural.");
+
+
+/* ================= BALANCE ================= */
+
+let cx=0,cy=0;
+
+boxes.forEach(b=>{
+cx+=b.offsetLeft+b.offsetWidth/2;
+cy+=b.offsetTop+b.offsetHeight/2;
+});
+
+cx/=boxes.length;
+cy/=boxes.length;
+
+let dist=Math.hypot(cx-W/2,cy-H/2);
+
+let scoreBalance=
+dist<100?20:
+dist<250?15:
+dist<400?10:6;
+
+if(dist>300)
+msg.push("🔴 El diseño está cargado hacia un lado.");
+
+
+/* ================= SIMETRÍA ================= */
+
+let symmetry=0;
+
+boxes.forEach(a=>{
+boxes.forEach(b=>{
+if(a===b)return;
+
+let ax=a.offsetLeft+a.offsetWidth/2;
+let bx=b.offsetLeft+b.offsetWidth/2;
+
+if(Math.abs((ax+bx)/2 - W/2)<tol) symmetry++;
+});
+});
+
+let scoreSimetria=Math.min(10,symmetry);
+
+if(scoreSimetria>6)
+msg.push("🟢 Buena simetría detectada.");
+if(scoreSimetria<3)
+msg.push("🟡 Poca simetría, podrías mejorar equilibrio visual.");
+
+
+/* ================= SUPERPOSICIÓN ================= */
+
+let badOverlap=0,goodOverlap=0;
+
+for(let i=0;i<boxes.length;i++){
+for(let j=i+1;j<boxes.length;j++){
+
+let a=boxes[i],b=boxes[j];
+
+let x=Math.max(0,Math.min(a.offsetLeft+a.offsetWidth,b.offsetLeft+b.offsetWidth)-Math.max(a.offsetLeft,b.offsetLeft));
+let y=Math.max(0,Math.min(a.offsetTop+a.offsetHeight,b.offsetTop+b.offsetHeight)-Math.max(a.offsetTop,b.offsetTop));
+
+if(x*y>tol*tol){
+
+let inside=
+(a.offsetLeft>=b.offsetLeft-tol &&
+a.offsetLeft+a.offsetWidth<=b.offsetLeft+b.offsetWidth+tol &&
+a.offsetTop>=b.offsetTop-tol &&
+a.offsetTop+a.offsetHeight<=b.offsetTop+b.offsetHeight+tol)
+
+||
+(b.offsetLeft>=a.offsetLeft-tol &&
+b.offsetLeft+b.offsetWidth<=a.offsetLeft+a.offsetWidth+tol &&
+b.offsetTop>=a.offsetTop-tol &&
+b.offsetTop+b.offsetHeight<=a.offsetTop+a.offsetHeight+tol);
+
+if(inside) goodOverlap++;
+else badOverlap++;
+}
+}}
+
+let scoreOverlap=10;
+
+if(badOverlap>0){
+scoreOverlap=4;
+msg.push("🔴 Elementos chocando entre sí.");
+}
+if(goodOverlap>0){
+msg.push("🟢 Uso correcto de contenedores.");
+}
+
+
+/* ================= TOTAL ================= */
+
+let total=
+scoreEspacio+
+scoreMargen+
+scoreAlineacion+
+scoreBalance+
+scoreSimetria+
+scoreOverlap;
+
+total=Math.max(0,Math.min(100,total));
+
+
+/* ================= UI ================= */
+
+b1.style.width=(scoreEspacio/30*100)+"%";
+b2.style.width=(scoreMargen/30*100)+"%";
+b3.style.width=(scoreAlineacion/20*100)+"%";
+b4.style.width=(scoreBalance/20*100)+"%";
+b5.style.width=(scoreOverlap/10*100)+"%";
+
+scoreUI.textContent=total.toFixed(1);
+scoreUI2.textContent=total.toFixed(1);
+
+
+/* ================= CONSEJOS ================= */
+
+/* ================= CONSEJOS + EXPLICACIÓN PRO ================= */
+
+msg.push("\n🧠 CÓMO SE EVALÚA EL DISEÑO:");
+
+msg.push("\n📦 ESPACIO:");
+msg.push("• No solo importa cuánto espacio vacío hay, sino cómo está distribuido.");
+msg.push("• Un diseño puede tener mucho espacio libre y aun así estar mal si todo está en un solo lado.");
+msg.push("• El sistema penaliza concentraciones (ej: todo arriba o todo a la izquierda).");
+msg.push("• Ideal: equilibrio entre vacío y contenido en TODA la pantalla.");
+
+msg.push("\n📏 MÁRGENES:");
+msg.push("• Se detecta automáticamente la distancia promedio a bordes y entre elementos.");
+msg.push("• No necesitas usar valores exactos, pero sí consistentes.");
+msg.push("• El sistema permite error humano (~50px).");
+msg.push("• Problemas comunes:");
+msg.push("  - Elementos pegados al borde");
+msg.push("  - Distancias totalmente diferentes sin patrón");
+
+msg.push("\n🧩 ALINEACIÓN:");
+msg.push("• Se analiza si los elementos comparten ejes (horizontal o vertical).");
+msg.push("• Alinear no es que estén 'cerca', sino que sigan una línea visual.");
+msg.push("• Ejemplo bueno: columnas, filas, grids.");
+msg.push("• Ejemplo malo: posiciones aleatorias sin estructura.");
+
+msg.push("\n⚖️ BALANCE:");
+msg.push("• Se calcula el centro visual del conjunto.");
+msg.push("• Si todo el peso visual cae en un lado → penalización.");
+msg.push("• No significa simetría perfecta, sino distribución equilibrada.");
+
+msg.push("\n🪞 SIMETRÍA:");
+msg.push("• Se detectan patrones espejo automáticamente.");
+msg.push("• No es obligatoria, pero mejora mucho la percepción visual.");
+msg.push("• El sistema recompensa cuando hay coherencia simétrica.");
+
+msg.push("\n🚫 SUPERPOSICIÓN:");
+msg.push("• Diferencia entre:");
+msg.push("  - ❌ Choques accidentales (mal diseño)");
+msg.push("  - ✅ Contenedores (un elemento dentro de otro)");
+msg.push("• El sistema entiende jerarquía visual básica.");
+
+msg.push("\n🎯 IMPORTANTE:");
+msg.push("• El sistema NO impone reglas rígidas.");
+msg.push("• Detecta patrones en tu diseño.");
+msg.push("• Penaliza incoherencias, no estilos diferentes.");
+msg.push("• Permite errores humanos (tolerancia de 50px).");
+
+msg.push("\n💡 CONSEJO GENERAL:");
+msg.push("Un buen diseño no es el más complejo, sino el más coherente.");
+
+tips.innerHTML=msg.join("<br>");
+tips.style.maxHeight="260px";
+tips.style.overflowY="auto";
+tips.style.paddingRight="6px";
+
+/* crear botón si no existe */
+if(!document.getElementById("toggleTips")){
+	let btn=document.createElement("button");
+	btn.id="toggleTips";
+	btn.textContent="👁 Ocultar texto";
+	btn.style.marginTop="8px";
+	btn.style.width="100%";
+	btn.style.padding="6px";
+	btn.style.border="none";
+	btn.style.background="#1f2937";
+	btn.style.color="#fff";
+	btn.style.borderRadius="6px";
+	btn.style.cursor="pointer";
+
+
+	btn.onclick=()=>{
+		if(tips.style.display==="none"){
+			tips.style.display="block";
+			btn.textContent="👁 Ocultar texto";
+		}else{
+			tips.style.display="none";
+			btn.textContent="👁 Mostrar texto";
+		}
+		setTimeout(actualizarDock,0);
+	};
+
+	tips.parentNode.appendChild(btn);
+}
+actualizarDock();
+};
+
+</script>
+
+</body>
+</html>
