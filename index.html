@@ -58,6 +58,7 @@ color:transparent;
 .wrapper{
 flex:1;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
 position:relative;
@@ -100,26 +101,17 @@ right:20px;
 
 .scroll-container{
 width:85%;
-overflow-x:hidden;
+overflow-x:auto;
 overflow-y:hidden;
 scroll-behavior:smooth;
 padding:20px 10px;
-}
 
-/* SCROLL BONITO */
+scrollbar-width:none;
+-ms-overflow-style:none;
+}
 
 .scroll-container::-webkit-scrollbar{
-height:14px;
-}
-
-.scroll-container::-webkit-scrollbar-track{
-background:#d1fae5;
-border-radius:20px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb{
-background:linear-gradient(90deg,#22c55e,#4ade80);
-border-radius:20px;
+display:none;
 }
 
 /* FILA */
@@ -204,6 +196,18 @@ font-size:18px;
 position:absolute;
 inset:0;
 z-index:10;
+}
+
+/* FRASE */
+
+.frase{
+margin-top:25px;
+font-size:24px;
+font-weight:500;
+color:#166534;
+opacity:.85;
+letter-spacing:.5px;
+text-align:center;
 }
 
 </style>
@@ -497,6 +501,10 @@ NEO-PUBLICACIONES
 <button class="scroll-btn right" onclick="mover(500)">
 ❯
 </button>
+
+<div class="frase">
+Explora el ecosistema Neo y descubre nuevas formas de aprender.
+</div>
 
 </div>
 
