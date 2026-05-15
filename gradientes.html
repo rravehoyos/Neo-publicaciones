@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neo-Gradient</title>
+<link rel="icon" href="neogradient.png" sizes="192x192">
+
+<style>
+
+:root{
+--bg:#0b0d12;
+--app:#151923;
+--panel:#1b2030;
+--box:#111622;
+--soft:#0d1119;
+--text:#ffffff;
+--sub:#9ea7b8;
+
+--accent1:#00c6ff;
+--accent2:#0066ff;
+--accent3:#8e2dff;
+
+--danger:#ff3b3b;
+--code:#00ffae;
+
+--shadow:0 0 40px rgba(0,0,0,.5);
+
+--border:rgba(255,255,255,.05);
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
+
+body{
+
+background:
+radial-gradient(circle at top left,#1d2b4d55,transparent 35%),
+radial-gradient(circle at bottom right,#8e2dff22,transparent 35%),
+var(--bg);
+
+height:100vh;
+
+overflow:hidden;
+
+padding:20px;
+
+color:var(--text);
+}
+
+/* ===== APP ===== */
+
+.app{
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+145deg,
+var(--app),
+#10141d
+);
+
+border-radius:35px;
+
+padding:25px;
+
+display:flex;
+flex-direction:column;
+gap:20px;
+
+box-shadow:var(--shadow);
+
+border:1px solid var(--border);
+
+backdrop-filter:blur(10px);
+}
+
+/* ===== HEADER ===== */
+
+.header{
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
+gap:10px;
+
+padding:10px;
+}
+
+.logo{
+
+width:95px;
+height:95px;
+
+border-radius:30px;
+
+position:relative;
+
+overflow:hidden;
+}
+
+.logo::before{
+
+content:"";
+
+position:absolute;
+
+inset:-30%;
+
+
+
+transform:rotate(25deg);
+
+}
+
+@keyframes shine{
+
+from{
+transform:translateX(-200%) rotate(25deg);
+}
+
+to{
+transform:translateX(250%) rotate(25deg);
+}
+
+}
+
+@keyframes spin{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
+}
+
+}
+
+.titulo{
+
+font-size:44px;
+font-weight:bold;
+
+letter-spacing:2px;
+
+background:
+linear-gradient(
+90deg,
+var(--accent1),
+var(--accent3)
+);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.sub{
+opacity:.75;
+font-size:15px;
+color:var(--sub);
+}
+
+/* ===== CONTENT ===== */
+
+.content{
+flex:1;
+display:flex;
+gap:20px;
+overflow:hidden;
+}
+
+/* ===== PREVIEW ===== */
+
+.previewZone{
+flex:1;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.preview{
+
+flex:1;
+
+border-radius:32px;
+
+transition:.3s;
+
+position:relative;
+
+overflow:hidden;
+
+background-size:300% 300%;
+
+border:1px solid rgba(255,255,255,.06);
+
+box-shadow:
+inset 0 0 20px rgba(255,255,255,.05),
+0 0 40px rgba(0,0,0,.25);
+}
+
+/* ===== PANEL ===== */
+
+.panel{
+
+width:480px;
+
+background:
+linear-gradient(
+180deg,
+var(--panel),
+#141927
+);
+
+border-radius:32px;
+
+padding:20px;
+
+overflow:auto;
+
+display:flex;
+flex-direction:column;
+gap:18px;
+
+border:1px solid rgba(255,255,255,.05);
+}
+
+/* ===== BOX ===== */
+
+.box{
+
+background:
+linear-gradient(
+180deg,
+var(--box),
+#0e1420
+);
+
+padding:18px;
+
+border-radius:24px;
+
+display:flex;
+flex-direction:column;
+gap:15px;
+
+border:1px solid rgba(255,255,255,.04);
+
+box-shadow:
+inset 0 0 10px rgba(255,255,255,.02);
+}
+
+label{
+font-size:14px;
+opacity:.85;
+letter-spacing:.5px;
+}
+
+/* ===== INPUTS ===== */
+
+select,
+input[type="range"]{
+width:100%;
+}
+
+select{
+
+background:var(--soft);
+
+border:none;
+outline:none;
+
+padding:15px;
+
+border-radius:16px;
+
+color:#fff;
+
+font-size:15px;
+
+border:1px solid rgba(255,255,255,.04);
+}
+
+/* ===== COLORS ===== */
+
+.colors{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.colorItem{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+background:var(--soft);
+
+padding:12px;
+
+border-radius:16px;
+
+border:1px solid rgba(255,255,255,.04);
+}
+
+.colorItem input[type="color"]{
+
+width:70px;
+height:55px;
+
+border:none;
+
+background:none;
+
+cursor:pointer;
+}
+
+.stop{
+flex:1;
+}
+
+.stop input{
+width:100%;
+accent-color:var(--accent1);
+}
+
+.stopValue{
+font-size:12px;
+opacity:.7;
+margin-top:5px;
+color:var(--sub);
+}
+
+/* ===== REMOVE ===== */
+
+.remove{
+
+width:45px;
+height:45px;
+
+border:none;
+
+border-radius:14px;
+
+background:var(--danger);
+
+color:#fff;
+
+cursor:pointer;
+
+flex-shrink:0;
+
+font-size:18px;
+
+transition:.2s;
+}
+
+.remove:hover{
+transform:scale(1.06);
+}
+
+/* ===== BUTTONS ===== */
+
+button{
+
+border:none;
+
+padding:16px;
+
+border-radius:18px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+color:#fff;
+
+transition:.2s;
+
+font-size:15px;
+}
+
+button:hover{
+transform:translateY(-2px);
+}
+
+.addColor{
+
+background:
+linear-gradient(
+45deg,
+var(--accent1),
+var(--accent2)
+);
+}
+
+.copy{
+
+background:
+linear-gradient(
+45deg,
+var(--accent3),
+var(--accent2)
+);
+}
+
+/* ===== PRESETS ===== */
+
+.presets{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+}
+
+.preset{
+
+height:65px;
+
+border-radius:18px;
+
+cursor:pointer;
+
+border:2px solid transparent;
+
+transition:.25s;
+
+position:relative;
+
+overflow:hidden;
+}
+
+.preset::after{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+background:
+linear-gradient(
+180deg,
+transparent,
+rgba(0,0,0,.2)
+);
+}
+
+.preset:hover{
+
+transform:scale(1.04);
+
+border-color:#fff;
+
+box-shadow:
+0 0 20px rgba(255,255,255,.15);
+}
+
+/* ===== DIRECTION ===== */
+
+.direction{
+
+width:180px;
+height:180px;
+
+border-radius:50%;
+
+margin:auto;
+
+background:
+radial-gradient(circle,#1d2333,#0c1018);
+
+position:relative;
+
+cursor:pointer;
+
+border:1px solid rgba(255,255,255,.05);
+
+box-shadow:
+inset 0 0 15px rgba(255,255,255,.03);
+}
+
+.point{
+
+width:22px;
+height:22px;
+
+background:#fff;
+
+border-radius:50%;
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+box-shadow:0 0 20px #fff;
+}
+
+.line{
+
+width:4px;
+height:75px;
+
+background:
+linear-gradient(
+var(--accent1),
+transparent
+);
+
+position:absolute;
+
+left:50%;
+top:15px;
+
+transform:translateX(-50%);
+
+transform-origin:bottom;
+
+border-radius:20px;
+
+box-shadow:
+0 0 15px var(--accent1);
+}
+
+/* ===== TEXTAREA ===== */
+
+textarea{
+
+width:100%;
+height:240px;
+
+resize:none;
+
+border:none;
+outline:none;
+
+border-radius:20px;
+
+padding:18px;
+
+background:var(--soft);
+
+color:var(--code);
+
+line-height:1.6;
+
+font-size:14px;
+
+border:1px solid rgba(255,255,255,.04);
+}
+
+/* ===== TOGGLE ===== */
+
+.toggle{
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+background:var(--soft);
+
+padding:15px;
+
+border-radius:18px;
+
+border:1px solid rgba(255,255,255,.04);
+}
+
+.toggle input{
+
+width:25px;
+height:25px;
+
+accent-color:var(--accent1);
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes gradientMove{
+
+0%{
+background-position:0% 50%;
+}
+
+25%{
+background-position:100% 50%;
+}
+
+50%{
+background-position:100% 100%;
+}
+
+75%{
+background-position:0% 100%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+/* ===== SCROLL ===== */
+
+::-webkit-scrollbar{
+width:6px;
+}
+
+::-webkit-scrollbar-thumb{
+
+background:
+linear-gradient(
+var(--accent1),
+var(--accent3)
+);
+
+border-radius:20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="logo">
+	<img src="logo.png" class="logo">
+</div>
+
+<div class="titulo">
+Neo-Gradient
+</div>
+
+<div class="sub">
+Generador avanzado de degradados CSS
+</div>
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<!-- PREVIEW -->
+
+<div class="previewZone">
+
+<div class="preview" id="preview"></div>
+
+</div>
+
+<!-- PANEL -->
+
+<div class="panel">
+
+<!-- TYPE -->
+
+<div class="box">
+
+<label>
+Tipo de degradado
+</label>
+
+<select id="type">
+
+<option value="linear">
+Linear
+</option>
+
+<option value="radial">
+Radial
+</option>
+
+<option value="conic">
+Conic
+</option>
+
+</select>
+
+</div>
+
+<!-- DIRECTION -->
+
+<div class="box">
+
+<label>
+Dirección visual
+</label>
+
+<div class="direction" id="direction">
+
+<div class="line" id="line"></div>
+
+<div class="point" id="point"></div>
+
+</div>
+
+</div>
+
+<!-- COLORS -->
+
+<div class="box">
+
+<label>
+Colores y posiciones
+</label>
+
+<div class="colors" id="colors"></div>
+
+<button class="addColor" id="addColor">
+Agregar color
+</button>
+
+</div>
+
+<!-- PRESETS -->
+
+<div class="box">
+
+<label>
+Presets
+</label>
+
+<div class="presets">
+
+<div class="preset" style="background:linear-gradient(45deg,#ff512f,#dd2476)" data-colors="#ff512f,#dd2476"></div>
+
+<div class="preset" style="background:linear-gradient(45deg,#00c6ff,#0072ff)" data-colors="#00c6ff,#0072ff"></div>
+
+<div class="preset" style="background:linear-gradient(45deg,#8e2dff,#ff00cc)" data-colors="#8e2dff,#ff00cc"></div>
+
+<div class="preset" style="background:linear-gradient(45deg,#11998e,#38ef7d)" data-colors="#11998e,#38ef7d"></div>
+
+<div class="preset" style="background:linear-gradient(45deg,#fc466b,#3f5efb)" data-colors="#fc466b,#3f5efb"></div>
+
+<div class="preset" style="background:linear-gradient(45deg,#f7971e,#ffd200)" data-colors="#f7971e,#ffd200"></div>
+
+</div>
+
+</div>
+
+<!-- ANIMATE -->
+
+<div class="box">
+
+<div class="toggle">
+
+<label>
+Animar degradado
+</label>
+
+<input type="checkbox" id="animate">
+
+</div>
+
+</div>
+
+<!-- CODE -->
+
+<div class="box">
+
+<label>
+Código CSS
+</label>
+
+<textarea id="code" readonly></textarea>
+
+</div>
+
+<!-- COPY -->
+
+<button class="copy" id="copy">
+Copiar código
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let preview=document.getElementById("preview");
+
+let type=document.getElementById("type");
+
+let colorsBox=document.getElementById("colors");
+
+let addColor=document.getElementById("addColor");
+
+let code=document.getElementById("code");
+
+let copy=document.getElementById("copy");
+
+let animate=document.getElementById("animate");
+
+let direction=document.getElementById("direction");
+
+let line=document.getElementById("line");
+
+let angle=90;
+
+let colores=[
+
+{
+color:"#00c6ff",
+stop:0
+},
+
+{
+color:"#0066ff",
+stop:50
+},
+
+{
+color:"#8e2dff",
+stop:100
+}
+
+];
+
+/* ===== RENDER COLORS ===== */
+
+function renderColors(){
+
+colorsBox.innerHTML="";
+
+colores.forEach((c,index)=>{
+
+let div=document.createElement("div");
+
+div.className="colorItem";
+
+div.innerHTML=`
+
+<input
+type="color"
+value="${c.color}"
+data-index="${index}"
+class="picker"
+>
+
+<div class="stop">
+
+<input
+type="range"
+min="0"
+max="100"
+value="${c.stop}"
+data-index="${index}"
+class="range"
+>
+
+<div class="stopValue">
+${c.stop}%
+</div>
+
+</div>
+
+<button
+class="remove"
+data-index="${index}"
+>
+✕
+</button>
+
+`;
+
+colorsBox.appendChild(div);
+
+});
+
+/* PICKERS */
+
+document.querySelectorAll(".picker").forEach(e=>{
+
+e.addEventListener("input",event=>{
+
+colores[
+event.target.dataset.index
+].color=event.target.value;
+
+updateGradient();
+
+});
+
+});
+
+/* RANGE */
+
+document.querySelectorAll(".range").forEach(e=>{
+
+e.addEventListener("input",event=>{
+
+colores[
+event.target.dataset.index
+].stop=event.target.value;
+
+renderColors();
+
+updateGradient();
+
+});
+
+});
+
+/* REMOVE */
+
+document.querySelectorAll(".remove").forEach(e=>{
+
+e.addEventListener("click",event=>{
+
+if(colores.length>2){
+
+colores.splice(
+event.target.dataset.index,
+1
+);
+
+renderColors();
+
+updateGradient();
+
+}
+
+});
+
+});
+
+}
+
+/* ===== UPDATE ===== */
+
+function updateGradient(){
+
+let colorString=
+colores
+.map(
+c=>`${c.color} ${c.stop}%`
+)
+.join(",");
+
+let gradient="";
+
+/* TYPES */
+
+if(type.value=="linear"){
+
+gradient=
+`linear-gradient(${angle}deg,${colorString})`;
+
+}
+
+if(type.value=="radial"){
+
+gradient=
+`radial-gradient(circle,${colorString})`;
+
+}
+
+if(type.value=="conic"){
+
+gradient=
+`conic-gradient(from ${angle}deg,${colorString})`;
+
+}
+
+/* PREVIEW */
+
+preview.style.background=gradient;
+
+/* ANIMATION */
+
+if(animate.checked){
+
+preview.style.backgroundSize=
+"300% 300%";
+
+preview.style.animation=
+"gradientMove 4s linear infinite";
+
+}
+
+else{
+
+preview.style.backgroundSize=
+"100% 100%";
+
+preview.style.animation="none";
+
+}
+
+/* CODE */
+
+code.value=`
+
+background:${gradient};
+
+background-size:300% 300%;
+
+${animate.checked
+?"animation:gradientMove 4s linear infinite;"
+:""}
+
+@keyframes gradientMove{
+
+0%{
+background-position:0% 50%;
+}
+
+25%{
+background-position:100% 50%;
+}
+
+50%{
+background-position:100% 100%;
+}
+
+75%{
+background-position:0% 100%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+`;
+
+/* DIRECTION */
+
+line.style.transform=
+`translateX(-50%) rotate(${angle}deg)`;
+
+}
+
+/* ===== ADD COLOR ===== */
+
+addColor.addEventListener("click",()=>{
+
+colores.push({
+
+color:"#ffffff",
+
+stop:100
+
+});
+
+renderColors();
+
+updateGradient();
+
+});
+
+/* ===== PRESETS ===== */
+
+document.querySelectorAll(".preset").forEach(e=>{
+
+e.addEventListener("click",()=>{
+
+let arr=
+e.dataset.colors.split(",");
+
+colores=[];
+
+arr.forEach((c,index)=>{
+
+colores.push({
+
+color:c,
+
+stop:
+index*
+(100/(arr.length-1))
+
+});
+
+});
+
+renderColors();
+
+updateGradient();
+
+});
+
+});
+
+/* ===== COPY ===== */
+
+copy.addEventListener("click",()=>{
+
+navigator.clipboard.writeText(
+code.value
+);
+
+copy.innerText=
+"Código copiado";
+
+setTimeout(()=>{
+
+copy.innerText=
+"Copiar código";
+
+},1500);
+
+});
+
+/* ===== EVENTS ===== */
+
+animate.addEventListener(
+"input",
+updateGradient
+);
+
+type.addEventListener(
+"input",
+updateGradient
+);
+
+/* ===== DIRECTION ===== */
+
+direction.addEventListener(
+"mousemove",
+e=>{
+
+if(e.buttons!==1)return;
+
+let rect=
+direction.getBoundingClientRect();
+
+let x=
+e.clientX-
+rect.left-
+rect.width/2;
+
+let y=
+e.clientY-
+rect.top-
+rect.height/2;
+
+angle=
+Math.atan2(y,x)*
+180/Math.PI+90;
+
+updateGradient();
+
+}
+);
+
+/* ===== START ===== */
+
+renderColors();
+
+updateGradient();
+
+</script>
+
+</body>
+</html>
