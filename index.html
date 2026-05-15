@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>Neo-publicaciones</title>
+
 <link rel="icon" href="logopubli.png">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
 
 body{
 background:#eef7f2;
 color:#1f2937;
-height:100vh;
+min-height:100vh;
 display:flex;
 flex-direction:column;
 align-items:center;
+overflow-x:hidden;
 }
 
 /* HEADER */
+
 .header{
 width:100%;
 height:90px;
@@ -47,23 +56,27 @@ background:linear-gradient(90deg,#22c55e,#16a34a);
 color:transparent;
 }
 
-/* CONTENEDOR CENTRADO */
+/* WRAPPER */
+
 .wrapper{
-flex:1;
 width:100%;
 display:flex;
+flex-direction:column;
 align-items:center;
-justify-content:center;
+padding:30px;
 }
 
+/* GRID */
+
 .container{
-width:1000px; /* 🔥 más compacto */
+width:1000px;
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:18px;
 }
 
 /* CARD */
+
 .card{
 perspective:1000px;
 height:220px;
@@ -82,6 +95,7 @@ transform:rotateY(180deg);
 }
 
 /* CARAS */
+
 .face{
 position:absolute;
 width:100%;
@@ -95,6 +109,7 @@ overflow:hidden;
 }
 
 /* FRENTE */
+
 .front{
 background:#ffffff;
 box-shadow:0 4px 12px rgba(0,0,0,.08);
@@ -106,6 +121,7 @@ height:200px;
 }
 
 /* REVERSO */
+
 .back{
 background:linear-gradient(135deg,#bbf7d0,#4ade80);
 transform:rotateY(180deg);
@@ -125,129 +141,334 @@ font-size:20px;
 }
 
 /* LINK */
+
 .card a{
 position:absolute;
 inset:0;
 z-index:3;
 }
+
+/* PROXIMAMENTE */
+
+.zona-proximamente{
+width:1000px;
+margin-top:35px;
+background:#ffffff;
+border-radius:22px;
+padding:25px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.titulo-prox{
+font-size:38px;
+font-weight:bold;
+margin-bottom:20px;
+color:#16a34a;
+text-align:center;
+}
+
+/* SCROLL */
+
+.scroll-apps{
+display:flex;
+gap:20px;
+overflow-x:auto;
+padding-bottom:15px;
+scroll-behavior:smooth;
+}
+
+/* SCROLL BONITO */
+
+.scroll-apps::-webkit-scrollbar{
+height:12px;
+}
+
+.scroll-apps::-webkit-scrollbar-track{
+background:#d1fae5;
+border-radius:20px;
+}
+
+.scroll-apps::-webkit-scrollbar-thumb{
+background:linear-gradient(90deg,#22c55e,#4ade80);
+border-radius:20px;
+}
+
+/* MINI CARDS */
+
+.mini-card{
+min-width:180px;
+height:220px;
+background:#f0fdf4;
+border-radius:18px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:15px;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+transition:.3s;
+flex-shrink:0;
+}
+
+.mini-card:hover{
+transform:translateY(-6px);
+background:#dcfce7;
+}
+
+.mini-card img{
+width:70px;
+height:70px;
+margin-bottom:15px;
+opacity:.75;
+}
+
+.mini-card span{
+font-size:22px;
+font-weight:bold;
+color:#166534;
+margin-bottom:8px;
+}
+
+.mini-card p{
+font-size:18px;
+color:#6b7280;
+}
+
 </style>
 
 </head>
 <body>
 
 <div class="header">
+
     <div class="logo"></div>
-    <div class="titulo">NEO-PUBLICACIONES</div>
+
+    <div class="titulo">
+        NEO-PUBLICACIONES
+    </div>
+
 </div>
 
 <div class="wrapper">
+
     <div class="container">
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="Neocolor.png">
                 </div>
+
                 <div class="face back">
                     <h3>Neo-Color</h3>
-                    <p>Accede a la herramienta más avanzada para crear y seleccionar paletas de colores.</p>
+                    <p>
+                        Accede a la herramienta más avanzada para crear y seleccionar paletas de colores.
+                    </p>
                 </div>
+
                 <a href="selector.html"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neolienzo.png">
                 </div>
+
                 <div class="face back">
                     <h3>Neo-Lienzo</h3>
-                    <p>La herramienta definitiva para guiarte en la creación y maquetación de espacios en tus sitios web.</p>
+                    <p>
+                        La herramienta definitiva para guiarte en la creación y maquetación de espacios web.
+                    </p>
                 </div>
+
                 <a href="calificador.html"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neocode.png">
                 </div>
+
                 <div class="face back">
                     <h3>Neo-Code</h3>
-                    <p>Una herramienta interactiva diseñada para ayudarte a comprender desde cero las propiedades básicas de HTML y CSS.</p>
+                    <p>
+                        Aprende y experimenta con HTML y CSS desde cero de forma interactiva.
+                    </p>
                 </div>
+
                 <a href="Neocode.html"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neosumas.png">
                 </div>
+
                 <div class="face back">
-                    <h3>Neo-sumas</h3>
-                    <p>Pon a prueba tu rapidez y tu mente enfrentándote a otros oponentes en desafíos de sumas y restas.</p>
+                    <h3>Neo-Sumas</h3>
+                    <p>
+                        Pon a prueba tu rapidez mental enfrentándote a otros jugadores.
+                    </p>
                 </div>
+
                 <a href="https://www.psicokendy.com/NeoSumas"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neolab.png">
                 </div>
+
                 <div class="face back">
-                    <h3>Neo-lab</h3>
-                    <p>Una aplicación interactiva que te ayudará a comprender cómo se comportan los reactivos y las reacciones químicas</p>
+                    <h3>Neo-Lab</h3>
+                    <p>
+                        Comprende reacciones químicas y comportamiento de reactivos.
+                    </p>
                 </div>
+
                 <a href="https://imee3011.github.io/Neo-Lab/"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neogradient.png">
                 </div>
+
                 <div class="face back">
                     <h3>Neo-Gradient</h3>
-                    <p>Una herramienta creativa diseñada para crear, visualizar y experimentar con degradados modernos</p>
+                    <p>
+                        Crea y experimenta con degradados modernos para CSS.
+                    </p>
                 </div>
+
                 <a href="gradientes.html"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neoparticulas.png">
                 </div>
+
                 <div class="face back">
                     <h3>Neo-Particles</h3>
-                    <p>Una herramienta visual e interactiva que te permite crear, controlar y experimentar con efectos de partículas dinámicas.</p>
+                    <p>
+                        Diseña efectos visuales de partículas dinámicas en canvas.
+                    </p>
                 </div>
+
                 <a href="particulas.html"></a>
+
             </div>
         </div>
 
         <div class="card">
             <div class="inner">
+
                 <div class="face front">
                     <img src="neoanimator.png">
                 </div>
+
                 <div class="face back">
-                    <h3>Neo-animator</h3>
-                    <p>Una herramienta creativa diseñada para generar animaciones fluidas y modernas en elementos pequeños como botones,</p>
+                    <h3>Neo-Animator</h3>
+                    <p>
+                        Genera animaciones modernas y fluidas para elementos web.
+                    </p>
                 </div>
+
                 <a href="animaciones.html"></a>
+
             </div>
         </div>
 
     </div>
+
+    <!-- PROXIMAMENTE -->
+
+    <div class="zona-proximamente">
+
+        <div class="titulo-prox">
+            🚀 Próximamente
+        </div>
+
+        <div class="scroll-apps">
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png">
+                <span>Neo-AI</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/2721/2721297.png">
+                <span>Neo-Game</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png">
+                <span>Neo-Music</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+                <span>Neo-Chat</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3522/3522093.png">
+                <span>Neo-Draw</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png">
+                <span>Neo-Cloud</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/906/906175.png">
+                <span>Neo-Bot</span>
+                <p>No disponible</p>
+            </div>
+
+            <div class="mini-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1157/1157109.png">
+                <span>Neo-Space</span>
+                <p>No disponible</p>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 </body>
