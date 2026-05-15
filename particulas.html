@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neo-Particles</title>
+
+<style>
+
+:root{
+--bg:#081018;
+--app:#0d1722;
+--panel:#13202d;
+--box:#0f1a26;
+
+--accent1:#00d9ff;
+--accent2:#0066ff;
+--accent3:#00ffb3;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
+
+body{
+background:var(--bg);
+height:100vh;
+overflow:hidden;
+padding:20px;
+color:#fff;
+}
+
+.app{
+width:100%;
+height:100%;
+background:#0d1722;
+border-radius:35px;
+padding:25px;
+display:flex;
+flex-direction:column;
+gap:20px;
+border:1px solid rgba(255,255,255,.05);
+overflow:hidden;
+}
+
+/* ===== HEADER ===== */
+
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+width:95px;
+height:95px;
+border-radius:30px;
+}
+
+@keyframes spin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+.titulo{
+font-size:44px;
+font-weight:bold;
+
+background:
+linear-gradient(
+90deg,
+var(--accent1),
+var(--accent3)
+);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.sub{
+opacity:.7;
+font-size:15px;
+}
+
+/* ===== CONTENT ===== */
+
+.content{
+flex:1;
+display:flex;
+gap:20px;
+overflow:hidden;
+min-height:0;
+}
+
+/* ===== PANEL ===== */
+
+.panel{
+width:430px;
+min-width:430px;
+background:#13202d;
+border-radius:30px;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:18px;
+overflow:auto;
+}
+
+.box{
+background:#0f1a26;
+padding:18px;
+border-radius:22px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+label{
+font-size:14px;
+opacity:.8;
+}
+
+select,
+input[type="range"],
+input[type="color"]{
+width:100%;
+}
+
+select{
+background:#091119;
+border:none;
+outline:none;
+padding:15px;
+border-radius:16px;
+color:#fff;
+font-size:15px;
+}
+
+input[type="color"]{
+height:55px;
+border:none;
+background:none;
+cursor:pointer;
+}
+
+/* ===== PREVIEW ===== */
+
+.preview{
+flex:1;
+position:relative;
+overflow:hidden;
+border-radius:35px;
+
+border:
+2px solid rgba(255,255,255,.08);
+
+background:transparent;
+
+box-shadow:
+0 0 0 1px rgba(255,255,255,.03),
+0 0 40px rgba(0,0,0,.4);
+
+min-width:0;
+min-height:0;
+}
+
+/* ===== CANVAS ===== */
+
+canvas{
+width:100%;
+height:100%;
+display:block;
+background:transparent;
+}
+
+/* ===== BUTTONS ===== */
+
+.buttons{
+display:flex;
+gap:12px;
+}
+
+button{
+flex:1;
+border:none;
+padding:16px;
+border-radius:18px;
+cursor:pointer;
+font-weight:bold;
+font-size:15px;
+color:#fff;
+transition:.2s;
+}
+
+button:hover{
+transform:translateY(-2px);
+}
+
+.copy{
+background:
+linear-gradient(
+45deg,
+var(--accent1),
+var(--accent2)
+);
+}
+
+/* ===== SCROLL ===== */
+
+::-webkit-scrollbar{
+width:6px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#234;
+border-radius:20px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:1000px){
+
+.content{
+flex-direction:column;
+overflow:auto;
+}
+
+.panel{
+width:100%;
+min-width:100%;
+max-height:420px;
+}
+
+.preview{
+min-height:500px;
+}
+
+}
+
+</style>
+<link rel="icon" href="neoparticulas.png">
+</head>
+<body>
+
+<div class="app">
+
+<div class="header">
+
+<div class="logo">
+	<img src="logo.png" class="logo">
+</div>
+
+<div class="titulo">
+Neo-Particles
+</div>
+
+<div class="sub">
+Motor visual avanzado de partículas
+</div>
+
+</div>
+
+<div class="content">
+
+<!-- PANEL -->
+
+<div class="panel">
+
+<div class="box">
+
+<label>Tipo</label>
+
+<select id="type">
+
+<option value="dots">Dots</option>
+<option value="snow">Snow</option>
+<option value="matrix">Matrix</option>
+<option value="bubbles">Bubbles</option>
+<option value="stars">Stars</option>
+<option value="fire">Fire</option>
+<option value="rain">Rain</option>
+<option value="wave">Wave</option>
+<option value="network">Network</option>
+<option value="aurora">Aurora</option>
+<option value="pulse">Pulse</option>
+<option value="warp">Warp</option>
+<option value="meteor">Meteor</option>
+<option value="quantum">Quantum</option>
+<option value="electric">Electric</option>
+<option value="emoji">Emoji</option>
+
+</select>
+
+</div>
+
+<div class="box">
+
+<label>Forma</label>
+
+<select id="shape">
+
+<option value="circle">Circle</option>
+<option value="square">Square</option>
+<option value="triangle">Triangle</option>
+<option value="diamond">Diamond</option>
+<option value="star">Star</option>
+
+</select>
+
+</div>
+
+<div class="box">
+
+<label>Mouse</label>
+
+<select id="mouseMode">
+
+<option value="none">None</option>
+<option value="repel">Repel</option>
+<option value="attract">Attract</option>
+<option value="explode">Explode</option>
+
+</select>
+
+</div>
+
+<div class="box">
+
+<label>Cantidad</label>
+
+<input type="range" id="count" min="20" max="260" value="120">
+
+</div>
+
+<div class="box">
+
+<label>Velocidad</label>
+
+<input type="range" id="speed" min="1" max="15" value="3">
+
+</div>
+
+<div class="box">
+
+<label>Tamaño</label>
+
+<input type="range" id="size" min="1" max="25" value="4">
+
+</div>
+
+<div class="box">
+
+<label>Color</label>
+
+<input type="color" id="color" value="#00d9ff">
+
+</div>
+
+<div class="buttons">
+
+<button class="copy" id="copy">
+Copiar código
+</button>
+
+</div>
+
+</div>
+
+<!-- PREVIEW -->
+
+<div class="preview">
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let canvas=document.getElementById("canvas");
+let ctx=canvas.getContext("2d");
+
+let type=document.getElementById("type");
+let shape=document.getElementById("shape");
+let mouseMode=document.getElementById("mouseMode");
+
+let count=document.getElementById("count");
+let speed=document.getElementById("speed");
+let size=document.getElementById("size");
+
+let color=document.getElementById("color");
+let copy=document.getElementById("copy");
+
+let particles=[];
+
+let mouse={
+x:null,
+y:null
+};
+
+let emojis=[
+"✨","🔥","💎","🌎","⚡","🌟",
+"🚀","💻","🎵","🧠","👾","😎",
+"🪐","☄️","💥","🎮","🌈","🦾"
+];
+
+/* ===== RESIZE ===== */
+
+function resize(){
+
+canvas.width=canvas.offsetWidth;
+canvas.height=canvas.offsetHeight;
+
+createParticles();
+
+}
+
+window.addEventListener("resize",resize);
+
+resize();
+
+/* ===== MOUSE ===== */
+
+canvas.addEventListener("mousemove",e=>{
+
+let rect=canvas.getBoundingClientRect();
+
+mouse.x=e.clientX-rect.left;
+mouse.y=e.clientY-rect.top;
+
+});
+
+canvas.addEventListener("mouseleave",()=>{
+
+mouse.x=null;
+mouse.y=null;
+
+});
+
+/* ===== CREATE ===== */
+
+function createParticles(){
+
+particles=[];
+
+for(let i=0;i<count.value;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+
+size:Math.random()*size.value+2,
+
+vx:(Math.random()-.5)*speed.value,
+vy:(Math.random()-.5)*speed.value,
+
+emoji:
+emojis[
+Math.floor(
+Math.random()*emojis.length
+)
+]
+
+});
+
+}
+
+}
+
+/* ===== SHAPES ===== */
+
+function drawShape(p){
+
+if(shape.value=="circle"){
+
+ctx.arc(
+p.x,
+p.y,
+p.size,
+0,
+Math.PI*2
+);
+
+}
+
+if(shape.value=="square"){
+
+ctx.rect(
+p.x-p.size,
+p.y-p.size,
+p.size*2,
+p.size*2
+);
+
+}
+
+if(shape.value=="triangle"){
+
+ctx.moveTo(p.x,p.y-p.size);
+
+ctx.lineTo(
+p.x-p.size,
+p.y+p.size
+);
+
+ctx.lineTo(
+p.x+p.size,
+p.y+p.size
+);
+
+ctx.closePath();
+
+}
+
+if(shape.value=="diamond"){
+
+ctx.moveTo(p.x,p.y-p.size);
+
+ctx.lineTo(p.x-p.size,p.y);
+
+ctx.lineTo(p.x,p.y+p.size);
+
+ctx.lineTo(p.x+p.size,p.y);
+
+ctx.closePath();
+
+}
+
+if(shape.value=="star"){
+
+for(let i=0;i<5;i++){
+
+ctx.lineTo(
+p.x+Math.cos((18+i*72)/180*Math.PI)*p.size,
+p.y-Math.sin((18+i*72)/180*Math.PI)*p.size
+);
+
+ctx.lineTo(
+p.x+Math.cos((54+i*72)/180*Math.PI)*(p.size/2),
+p.y-Math.sin((54+i*72)/180*Math.PI)*(p.size/2)
+);
+
+}
+
+ctx.closePath();
+
+}
+
+}
+
+/* ===== DRAW ===== */
+
+function draw(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+particles.forEach((p,index)=>{
+
+let dx=mouse.x-p.x;
+let dy=mouse.y-p.y;
+
+let dist=Math.sqrt(dx*dx+dy*dy);
+
+/* ===== MOUSE ===== */
+
+if(mouse.x!=null && dist<140){
+
+if(mouseMode.value=="repel"){
+p.x-=dx*.03;
+p.y-=dy*.03;
+}
+
+if(mouseMode.value=="attract"){
+p.x+=dx*.01;
+p.y+=dy*.01;
+}
+
+if(mouseMode.value=="explode"){
+p.x-=dx*.08;
+p.y-=dy*.08;
+}
+
+}
+
+/* ===== NORMAL ===== */
+
+p.x+=p.vx;
+p.y+=p.vy;
+
+/* ===== EFFECTS ===== */
+
+if(type.value=="snow"){
+p.y+=1;
+}
+
+if(type.value=="matrix"){
+p.y+=5;
+}
+
+if(type.value=="bubbles"){
+p.y-=1;
+}
+
+if(type.value=="rain"){
+p.y+=10;
+p.x-=2;
+}
+
+if(type.value=="wave"){
+p.y+=Math.sin(Date.now()*.002+p.x*.02)*2;
+}
+
+if(type.value=="fire"){
+p.y-=2;
+}
+
+if(type.value=="aurora"){
+
+p.y+=
+Math.sin(
+Date.now()*.002+p.x*.01
+)*2;
+
+}
+
+if(type.value=="pulse"){
+
+p.size=
+Math.abs(
+Math.sin(Date.now()*.003+index)
+)*size.value+2;
+
+}
+
+if(type.value=="warp"){
+
+p.x+=p.vx*8;
+p.y+=p.vy*8;
+
+}
+
+if(type.value=="meteor"){
+
+p.x+=14;
+p.y+=5;
+
+}
+
+if(type.value=="quantum"){
+
+if(Math.random()<0.02){
+
+p.x=Math.random()*canvas.width;
+p.y=Math.random()*canvas.height;
+
+}
+
+}
+
+if(type.value=="electric"){
+
+p.x+=Math.random()*8-4;
+p.y+=Math.random()*8-4;
+
+}
+
+/* ===== EMOJI ===== */
+
+if(type.value=="emoji"){
+
+ctx.shadowBlur=0;
+
+ctx.font=
+(p.size*6)+"px serif";
+
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+
+ctx.fillStyle="#fff";
+
+ctx.fillText(
+p.emoji,
+p.x,
+p.y
+);
+
+}
+
+/* ===== NORMAL DRAW ===== */
+
+else{
+
+ctx.beginPath();
+
+ctx.fillStyle=color.value;
+
+ctx.shadowBlur=20;
+ctx.shadowColor=color.value;
+
+drawShape(p);
+
+ctx.fill();
+
+}
+
+/* ===== LIMITS ===== */
+
+if(p.x<0)p.x=canvas.width;
+if(p.x>canvas.width)p.x=0;
+
+if(p.y<0)p.y=canvas.height;
+if(p.y>canvas.height)p.y=0;
+
+});
+
+/* ===== NETWORK ===== */
+
+if(
+type.value=="network" ||
+type.value=="electric"
+){
+
+for(let a=0;a<particles.length;a++){
+
+for(let b=a+1;b<particles.length;b++){
+
+let dx=
+particles[a].x-
+particles[b].x;
+
+let dy=
+particles[a].y-
+particles[b].y;
+
+let dist=
+Math.sqrt(dx*dx+dy*dy);
+
+if(dist<90){
+
+ctx.beginPath();
+
+ctx.strokeStyle=color.value;
+
+ctx.globalAlpha=.12;
+
+ctx.moveTo(
+particles[a].x,
+particles[a].y
+);
+
+ctx.lineTo(
+particles[b].x,
+particles[b].y
+);
+
+ctx.stroke();
+
+ctx.globalAlpha=1;
+
+}
+
+}
+
+}
+
+}
+
+requestAnimationFrame(draw);
+
+}
+
+/* ===== CODE ===== */
+
+<!-- REEMPLAZA COMPLETAMENTE ESTA FUNCIÓN -->
+
+function generateCode(){
+
+return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<style>
+
+body{
+margin:0;
+overflow:hidden;
+background:#081018;
+}
+
+canvas{
+width:100vw;
+height:100vh;
+display:block;
+background:transparent;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+const config={
+
+type:"${type.value}",
+shape:"${shape.value}",
+mouse:"${mouseMode.value}",
+
+count:${count.value},
+speed:${speed.value},
+size:${size.value},
+
+color:"${color.value}"
+
+};
+
+const emojis=[
+"✨","🔥","💎","🌎","⚡","🌟",
+"🚀","💻","🎵","🧠","👾","😎",
+"🪐","☄️","💥","🎮","🌈","🦾"
+];
+
+let mouse={
+x:null,
+y:null
+};
+
+window.addEventListener("resize",()=>{
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+createParticles();
+
+});
+
+canvas.addEventListener("mousemove",e=>{
+
+mouse.x=e.clientX;
+mouse.y=e.clientY;
+
+});
+
+canvas.addEventListener("mouseleave",()=>{
+
+mouse.x=null;
+mouse.y=null;
+
+});
+
+function createParticles(){
+
+particles=[];
+
+for(let i=0;i<config.count;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+
+size:Math.random()*config.size+2,
+
+vx:(Math.random()-.5)*config.speed,
+vy:(Math.random()-.5)*config.speed,
+
+emoji:
+emojis[
+Math.floor(
+Math.random()*emojis.length
+)
+]
+
+});
+
+}
+
+}
+
+function drawShape(p){
+
+if(config.shape=="circle"){
+
+ctx.arc(
+p.x,
+p.y,
+p.size,
+0,
+Math.PI*2
+);
+
+}
+
+if(config.shape=="square"){
+
+ctx.rect(
+p.x-p.size,
+p.y-p.size,
+p.size*2,
+p.size*2
+);
+
+}
+
+if(config.shape=="triangle"){
+
+ctx.moveTo(p.x,p.y-p.size);
+
+ctx.lineTo(
+p.x-p.size,
+p.y+p.size
+);
+
+ctx.lineTo(
+p.x+p.size,
+p.y+p.size
+);
+
+ctx.closePath();
+
+}
+
+if(config.shape=="diamond"){
+
+ctx.moveTo(p.x,p.y-p.size);
+
+ctx.lineTo(p.x-p.size,p.y);
+
+ctx.lineTo(p.x,p.y+p.size);
+
+ctx.lineTo(p.x+p.size,p.y);
+
+ctx.closePath();
+
+}
+
+}
+
+function draw(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+particles.forEach((p,index)=>{
+
+let dx=mouse.x-p.x;
+let dy=mouse.y-p.y;
+
+let dist=Math.sqrt(dx*dx+dy*dy);
+
+if(mouse.x!=null && dist<140){
+
+if(config.mouse=="repel"){
+p.x-=dx*.03;
+p.y-=dy*.03;
+}
+
+if(config.mouse=="attract"){
+p.x+=dx*.01;
+p.y+=dy*.01;
+}
+
+if(config.mouse=="explode"){
+p.x-=dx*.08;
+p.y-=dy*.08;
+}
+
+}
+
+p.x+=p.vx;
+p.y+=p.vy;
+
+if(config.type=="snow"){
+p.y+=1;
+}
+
+if(config.type=="matrix"){
+p.y+=5;
+}
+
+if(config.type=="bubbles"){
+p.y-=1;
+}
+
+if(config.type=="rain"){
+p.y+=10;
+p.x-=2;
+}
+
+if(config.type=="wave"){
+p.y+=Math.sin(Date.now()*.002+p.x*.02)*2;
+}
+
+if(config.type=="fire"){
+p.y-=2;
+}
+
+if(config.type=="aurora"){
+
+p.y+=
+Math.sin(
+Date.now()*.002+p.x*.01
+)*2;
+
+}
+
+if(config.type=="pulse"){
+
+p.size=
+Math.abs(
+Math.sin(Date.now()*.003+index)
+)*config.size+2;
+
+}
+
+if(config.type=="warp"){
+
+p.x+=p.vx*8;
+p.y+=p.vy*8;
+
+}
+
+if(config.type=="meteor"){
+
+p.x+=14;
+p.y+=5;
+
+}
+
+if(config.type=="quantum"){
+
+if(Math.random()<0.02){
+
+p.x=Math.random()*canvas.width;
+p.y=Math.random()*canvas.height;
+
+}
+
+}
+
+if(config.type=="electric"){
+
+p.x+=Math.random()*8-4;
+p.y+=Math.random()*8-4;
+
+}
+
+if(config.type=="emoji"){
+
+ctx.shadowBlur=0;
+
+ctx.font=
+(p.size*6)+"px serif";
+
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+
+ctx.fillStyle="#fff";
+
+ctx.fillText(
+p.emoji,
+p.x,
+p.y
+);
+
+}
+
+else{
+
+ctx.beginPath();
+
+ctx.fillStyle=config.color;
+
+ctx.shadowBlur=20;
+ctx.shadowColor=config.color;
+
+drawShape(p);
+
+ctx.fill();
+
+}
+
+if(p.x<0)p.x=canvas.width;
+if(p.x>canvas.width)p.x=0;
+
+if(p.y<0)p.y=canvas.height;
+if(p.y>canvas.height)p.y=0;
+
+});
+
+if(
+config.type=="network" ||
+config.type=="electric"
+){
+
+for(let a=0;a<particles.length;a++){
+
+for(let b=a+1;b<particles.length;b++){
+
+let dx=
+particles[a].x-
+particles[b].x;
+
+let dy=
+particles[a].y-
+particles[b].y;
+
+let dist=
+Math.sqrt(dx*dx+dy*dy);
+
+if(dist<90){
+
+ctx.beginPath();
+
+ctx.strokeStyle=config.color;
+
+ctx.globalAlpha=.12;
+
+ctx.moveTo(
+particles[a].x,
+particles[a].y
+);
+
+ctx.lineTo(
+particles[b].x,
+particles[b].y
+);
+
+ctx.stroke();
+
+ctx.globalAlpha=1;
+
+}
+
+}
+
+}
+
+}
+
+requestAnimationFrame(draw);
+
+}
+
+createParticles();
+draw();
+
+<\/script>
+
+</body>
+</html>
+`;
+
+}
+
+/* ===== UPDATE ===== */
+
+function update(){
+
+createParticles();
+
+}
+
+[
+type,
+shape,
+mouseMode,
+count,
+speed,
+size,
+color
+].forEach(e=>{
+
+e.addEventListener("input",update);
+
+});
+
+/* ===== COPY ===== */
+
+copy.addEventListener("click",()=>{
+
+navigator.clipboard.writeText(
+generateCode()
+);
+
+copy.innerText="Código copiado";
+
+setTimeout(()=>{
+
+copy.innerText="Copiar código";
+
+},1500);
+
+});
+
+/* ===== START ===== */
+
+update();
+draw();
+
+</script>
+
+</body>
+</html>
+
+
+
+
