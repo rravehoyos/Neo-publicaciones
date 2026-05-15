@@ -1,3 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Neo-publicaciones</title>
+
+<link rel="icon" href="logopubli.png">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
+
+body{
+background:#eef7f2;
+height:100vh;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+}
+
+/* HEADER */
+
+.header{
+width:100%;
+height:90px;
+background:#dff5e6;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.logo{
+position:absolute;
+left:20px;
+width:85px;
+height:85px;
+background:url("logo.png") center/cover no-repeat;
+border-radius:14px;
+}
+
+.titulo{
+font-size:70px;
+font-weight:bold;
+background:linear-gradient(90deg,#22c55e,#16a34a);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* WRAPPER */
+
+.wrapper{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+overflow:hidden;
+}
+
+/* BOTONES */
+
+.scroll-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:70px;
+height:70px;
+border:none;
+border-radius:50%;
+background:#22c55e;
+color:white;
+font-size:40px;
+cursor:pointer;
+z-index:100;
+box-shadow:0 4px 15px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.scroll-btn:hover{
+background:#16a34a;
+transform:translateY(-50%) scale(1.08);
+}
+
+.left{
+left:20px;
+}
+
+.right{
+right:20px;
+}
+
+/* SCROLL */
+
+.scroll-container{
+width:85%;
+overflow-x:auto;
+overflow-y:hidden;
+scroll-behavior:smooth;
+padding:20px 10px;
+}
+
+/* SCROLL BONITO */
+
+.scroll-container::-webkit-scrollbar{
+height:14px;
+}
+
+.scroll-container::-webkit-scrollbar-track{
+background:#d1fae5;
+border-radius:20px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb{
+background:linear-gradient(90deg,#22c55e,#4ade80);
+border-radius:20px;
+}
+
+/* FILA */
+
+.apps{
+display:flex;
+gap:22px;
+width:max-content;
+}
+
+/* CARD */
+
+.card{
+width:230px;
+height:260px;
+perspective:1000px;
+flex-shrink:0;
+}
+
+.inner{
+width:100%;
+height:100%;
+position:relative;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.card:hover .inner{
+transform:rotateY(180deg);
+}
+
+/* CARAS */
+
+.face{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:20px;
+backface-visibility:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+/* FRONT */
+
+.front{
+background:white;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.front img{
+width:190px;
+height:190px;
+object-fit:contain;
+}
+
+/* BACK */
+
+.back{
+background:linear-gradient(135deg,#bbf7d0,#4ade80);
+transform:rotateY(180deg);
+flex-direction:column;
+padding:15px;
+text-align:center;
+color:#064e3b;
+}
+
+.back h3{
+font-size:26px;
+margin-bottom:10px;
+}
+
+.back p{
+font-size:18px;
+}
+
+/* LINKS */
+
+.card a{
+position:absolute;
+inset:0;
+z-index:10;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<div class="logo"></div>
+
+<div class="titulo">
+NEO-PUBLICACIONES
+</div>
+
+</div>
+
+<div class="wrapper">
+
+<button class="scroll-btn left" onclick="mover(-500)">
+❮
+</button>
+
+<div class="scroll-container" id="scroll">
+
+<div class="apps">
+
+<!-- APPS DISPONIBLES -->
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="Neocolor.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Color</h3>
+<p>Herramienta avanzada para crear paletas de colores.</p>
+</div>
+
+<a href="selector.html"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neolienzo.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Lienzo</h3>
+<p>Diseña y organiza espacios visuales para sitios web.</p>
+</div>
+
+<a href="calificador.html"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neocode.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Code</h3>
+<p>Aprende HTML y CSS de forma interactiva.</p>
+</div>
+
+<a href="Neocode.html"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neosumas.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Sumas</h3>
+<p>Juego competitivo de rapidez matemática.</p>
+</div>
+
+<a href="https://www.psicokendy.com/NeoSumas"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neolab.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Lab</h3>
+<p>Explora reacciones químicas y reactivos.</p>
+</div>
+
+<a href="https://imee3011.github.io/Neo-Lab/"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neogradient.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Gradient</h3>
+<p>Crea gradientes modernos para CSS.</p>
+</div>
+
+<a href="gradientes.html"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neoparticulas.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Particles</h3>
+<p>Generador de partículas dinámicas.</p>
+</div>
+
+<a href="particulas.html"></a>
+
+</div>
+</div>
+
+<div class="card">
+<div class="inner">
+
+<div class="face front">
+<img src="neoanimator.png">
+</div>
+
+<div class="face back">
+<h3>Neo-Animator</h3>
+<p>Animaciones modernas para interfaces.</p>
+</div>
+
+<a href="animaciones.html"></a>
+
+</div>
+</div>
+
 <!-- FUTURAS -->
 
 <div class="card">
@@ -119,3 +489,31 @@
 
 </div>
 </div>
+
+</div>
+
+</div>
+
+<button class="scroll-btn right" onclick="mover(500)">
+❯
+</button>
+
+</div>
+
+<script>
+
+const scroll=document.getElementById("scroll")
+
+function mover(valor){
+
+scroll.scrollBy({
+left:valor,
+behavior:"smooth"
+})
+
+}
+
+</script>
+
+</body>
+</html>
