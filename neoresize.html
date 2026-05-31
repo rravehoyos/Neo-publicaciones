@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neo-Resize</title>
+<link rel="icon" href="neore.png" sizes="192x192">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f4f6fb;min-height:100vh}
+.header{display:flex;justify-content:center;align-items:center;gap:20px;padding:35px}
+.header img{width:90px;height:90px;object-fit:contain}
+.header h1{font-size:72px;color:#0b5cff}
+.app{
+width:98%;
+max-width:1600px;
+margin:auto;
+background:#fff;
+border:5px solid blue;
+border-radius:20px;
+display:grid;
+grid-template-columns:460px 1fr;
+}
+.sidebar{padding:30px;}
+.upload{border:2px dashed #0b5cff;border-radius:18px;padding:30px;text-align:center;background:#fafcff}
+.rangebox{margin-top:35px}
+.row{display:flex;justify-content:space-between;font-weight:bold;font-size:32px}
+input[type=range]{width:100%;margin:20px 0}
+.card{margin-top:30px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:18px;padding:25px;text-align:center}
+.card h3{color:#0b5cff}
+.card p{font-size:40px;font-weight:bold;color:#0b5cff}
+button{width:100%;margin-top:25px;padding:20px;border:none;border-radius:15px;background:linear-gradient(90deg,#0b5cff,#0050f0);color:#fff;font-size:28px;cursor:pointer}
+.preview{padding:30px}
+.views{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.panel h2{text-align:center;margin-bottom:20px}
+.box{height:580px;border:2px dashed #d9dde7;border-radius:20px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.box img{max-width:100%;max-height:100%}
+@media(max-width:1100px){
+.app{grid-template-columns:1fr}
+.sidebar{border-right:none;border-bottom:1px solid #e5e7eb}
+.views{grid-template-columns:1fr}
+.header h1{font-size:50px}
+}
+#descargar{
+display:none;
+width:100%;
+margin-top:18px;
+padding:18px;
+border-radius:15px;
+background:linear-gradient(135deg,#10b981,#059669);
+color:white;
+text-decoration:none;
+font-size:24px;
+font-weight:700;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:12px;
+box-shadow:
+0 10px 25px rgba(16,185,129,.25),
+0 4px 10px rgba(0,0,0,.08);
+transition:.25s;
+text-align: center;
+}
+
+#descargar:hover{
+transform:translateY(-3px);
+box-shadow:
+0 18px 35px rgba(16,185,129,.35),
+0 8px 15px rgba(0,0,0,.12);
+}
+
+#descargar:active{
+transform:scale(.98);
+}
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:1100px){
+
+.app{
+grid-template-columns:1fr;
+max-width:900px;
+}
+
+.sidebar{
+padding:25px;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.preview{
+padding:25px;
+}
+
+.views{
+grid-template-columns:1fr;
+width:100%;
+}
+
+.box{
+height:450px;
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+padding:10px;
+}
+
+.header{
+flex-direction:column;
+gap:10px;
+padding:20px;
+text-align:center;
+}
+
+.header img{
+width:70px;
+height:70px;
+}
+
+.header h1{
+font-size:48px;
+}
+
+.app{
+width:100%;
+}
+
+.sidebar{
+padding:20px;
+}
+
+.upload{
+width:100%;
+}
+
+.rangebox{
+width:100%;
+}
+
+.row{
+font-size:22px;
+}
+
+.card{
+width:100%;
+}
+
+.card p{
+font-size:28px;
+}
+
+button,
+#descargar{
+font-size:20px;
+padding:16px;
+}
+
+.box{
+height:320px;
+}
+
+}
+
+@media(max-width:480px){
+
+.header h1{
+font-size:36px;
+}
+
+.header img{
+width:55px;
+height:55px;
+}
+
+.sidebar{
+padding:15px;
+}
+
+.row{
+font-size:18px;
+}
+
+.card h3{
+font-size:18px;
+}
+
+.card p{
+font-size:22px;
+}
+
+.panel h2{
+font-size:20px;
+}
+
+.box{
+height:250px;
+}
+
+button,
+#descargar{
+font-size:18px;
+padding:14px;
+}
+
+}
+</style>
+</head>
+<body>
+<div class="header">
+<img src="logo.png">
+<h1>Neo-Resize</h1>
+</div>
+
+<div class="app">
+<div class="sidebar">
+<div class="upload">
+<input type="file" id="archivo" accept="image/*">
+</div>
+
+<div class="rangebox">
+<div class="row"><span>Ancho</span><span id="wancho">500 px</span></div>
+<input type="range" id="ancho" min="50" max="2000" value="500">
+</div>
+
+<div class="rangebox">
+<div class="row"><span>Alto</span><span id="walto">500 px</span></div>
+<input type="range" id="alto" min="50" max="2000" value="500">
+</div>
+
+<div class="card">
+<h3>Dimensiones actuales</h3>
+<p id="medidas">500 x 500 px</p>
+</div>
+
+<button onclick="procesar()">Generar PNG</button>
+<a id="descargar" download="imagen.png">
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
+<path d="M12 3V15M12 15L7 10M12 15L17 10M5 19H19" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span>Descargar PNG</span>
+</a>
+</div>
+
+<div class="preview">
+<div class="views">
+<div class="panel">
+<h2>Original</h2>
+<div class="box"><img id="original"></div>
+</div>
+<div class="panel">
+<h2>Resultado</h2>
+<div class="box"><img id="resultado"></div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const archivo=document.getElementById("archivo");
+const original=document.getElementById("original");
+const resultado=document.getElementById("resultado");
+const ancho=document.getElementById("ancho");
+const alto=document.getElementById("alto");
+const medidas=document.getElementById("medidas");
+const wancho=document.getElementById("wancho");
+const walto=document.getElementById("walto");
+const descargar=document.getElementById("descargar");
+let img=null;
+
+function actualizar(){
+wancho.textContent=ancho.value+" px";
+walto.textContent=alto.value+" px";
+medidas.textContent=ancho.value+" x "+alto.value+" px";
+}
+ancho.oninput=actualizar;
+alto.oninput=actualizar;
+actualizar();
+
+archivo.onchange=e=>{
+const f=e.target.files[0];
+if(!f)return;
+const r=new FileReader();
+r.onload=v=>{
+img=new Image();
+img.onload=()=>original.src=img.src;
+img.src=v.target.result;
+};
+r.readAsDataURL(f);
+};
+
+function procesar(){
+if(!img){alert("Selecciona una imagen");return;}
+const c=document.createElement("canvas");
+c.width=parseInt(ancho.value);
+c.height=parseInt(alto.value);
+const x=c.getContext("2d");
+x.drawImage(img,0,0,c.width,c.height);
+const png=c.toDataURL("image/png");
+resultado.src=png;
+descargar.href=png;
+descargar.style.display="block";
+}
+</script>
+</body>
+</html>
