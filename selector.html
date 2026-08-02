@@ -2,9 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Neo-color</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neo-Color</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -113,12 +115,11 @@ drop-shadow(0 0 12px rgba(0,255,170,.25));
 
 .left,
 .right{
-padding:15px;
-position:relative;
-top:-80px;
+padding:25px;
 display:flex;
 align-items:center;
 }
+
 /* ===== CARD ===== */
 
 .card{
@@ -253,8 +254,6 @@ position:relative;
 overflow:hidden;
 
 min-height:500px;
-
-top:-40px;
 }
 
 /* ===== CANVAS ===== */
@@ -521,295 +520,699 @@ height:58px;
 }
 
 }
+
 </style>
-<link rel="icon" href="Neocolor.png" sizes="192x192">
+
+<link rel="icon" href="neocolor.png" sizes="192x192">
+
 </head>
 
 <body class="light">
 
 <div class="wrapper">
+
 <div class="container">
 
+<!-- HEADER -->
+
 <div class="header">
+
 <img src="logo.png" class="logo">
-Neo-ColorS
+
+<h1>Neo-ColorS</h1>
+
 </div>
 
-<div class="left">
-<div class="card">
-<h3 style="text-align:center;">Construye tu paleta</h3>
+<!-- LEFT -->
 
-<button onclick="setMode(2,this)">2 colores</button>
-<button onclick="setMode(3,this)">3 colores</button>
-<button onclick="setMode(4,this)" class="active">4 colores</button>
+<div class="left">
+
+<div class="card">
+
+<h3>
+Construye tu paleta
+</h3>
+
+<button onclick="setMode(2,this)">
+2 colores
+</button>
+
+<button onclick="setMode(3,this)">
+3 colores
+</button>
+
+<button onclick="setMode(4,this)" class="active">
+4 colores
+</button>
 
 <div class="preview" id="preview"></div>
 
-<button onclick="toggleTheme()">🌗 Cambiar tema</button>
-</div>
+<button onclick="toggleTheme()">
+🌗 Cambiar tema
+</button>
+
 </div>
 
+</div>
+
+<!-- CENTER -->
+
 <div class="center">
+
 <canvas id="canvas"></canvas>
 
 <div class="colorViewer">
-<div id="viewerColor" style="width:120px;height:120px;border-radius:12px;background:#ff0000;"></div>
-<div class="hexText" id="viewerHex">#FF0000</div>
+
+<div id="viewerColor"
+style="background:#ff0000;"></div>
+
+<div class="hexText"
+id="viewerHex">
+#FF0000
 </div>
 
 </div>
+
+</div>
+
+<!-- RIGHT -->
 
 <div class="right">
+
 <div class="card">
-<h3 style="text-align:center;margin-bottom: 1vw;">Variaciones</h3>
-<div class="varGrid" id="variations"></div>
-</div>
+
+<h3>
+Variaciones
+</h3>
+
+<div class="varGrid"
+id="variations"></div>
+
 </div>
 
 </div>
+
+</div>
+
 </div>
 
 <script>
+
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
 let w,h,cx,cy,r;
-let angle=0,smoothAngle=0,mode=4;
+
+let angle=0;
+let smoothAngle=0;
+
+let mode=4;
+
 let lastAngle=null;
 
 const SEGMENTS=12;
+
 const STEP=(Math.PI*2)/SEGMENTS;
+
 const OFFSET=-Math.PI/2;
+
 const INTERACTION_RADIUS_FACTOR=1.4;
 
+/* ===== RESIZE ===== */
+
 function resize(){
+
 canvas.width=canvas.clientWidth;
 canvas.height=canvas.clientHeight;
-w=canvas.width;h=canvas.height;
-cx=w/2;cy=h/2;
+
+w=canvas.width;
+h=canvas.height;
+
+cx=w/2;
+cy=h/2;
+
 r=Math.min(w,h)/2.3;
+
 drawFrame(angle);
+
 }
-window.addEventListener("resize",resize);
+
+window.addEventListener(
+"resize",
+resize
+);
+
 resize();
 
+/* ===== WHEEL ===== */
+
 function drawWheel(){
+
 for(let i=0;i<SEGMENTS;i++){
-let start=i*STEP+OFFSET,end=start+STEP;
+
+let start=i*STEP+OFFSET;
+
+let end=start+STEP;
+
 ctx.beginPath();
+
 ctx.moveTo(cx,cy);
-ctx.arc(cx,cy,r,start,end);
+
+ctx.arc(
+cx,
+cy,
+r,
+start,
+end
+);
+
 ctx.closePath();
+
 let mid=start+STEP/2;
-let hue=((mid-OFFSET)*180/Math.PI)%360;
-ctx.fillStyle=`hsl(${hue},100%,50%)`;
+
+let hue=
+((((mid-OFFSET)*180/Math.PI)%360)+360)%360;
+
+let grad=
+ctx.createRadialGradient(
+cx,
+cy,
+r*.1,
+cx,
+cy,
+r
+);
+
+grad.addColorStop(
+0,
+`hsla(${hue},100%,65%,1)`
+);
+
+grad.addColorStop(
+1,
+`hsla(${hue},100%,48%,1)`
+);
+
+ctx.fillStyle=grad;
+
 ctx.fill();
+
 }
+
 }
+
+/* ===== ANIMATE ===== */
 
 function animate(){
-smoothAngle+=(angle-smoothAngle)*0.2;
+
+smoothAngle+=
+(angle-smoothAngle)*0.18;
+
 drawFrame(smoothAngle);
+
 requestAnimationFrame(animate);
+
 }
 
+/* ===== FRAME ===== */
+
 function drawFrame(base){
+
 ctx.clearRect(0,0,w,h);
+
+drawGlow();
+
 drawWheel();
 
 let angles=getAngles(base);
 
 let pts=angles.map(a=>{
+
 a=(a%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
-return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a),a:a};
+
+return{
+
+x:cx+r*Math.cos(a),
+y:cy+r*Math.sin(a),
+a:a
+
+};
+
 });
 
 drawShape(pts);
+
 drawPoints(pts);
 
 updatePreview();
+
 updateVariations();
+
 }
+
+/* ===== GLOW ===== */
+
+function drawGlow(){
+
+let glow=
+ctx.createRadialGradient(
+cx,
+cy,
+r*.2,
+cx,
+cy,
+r*1.2
+);
+
+glow.addColorStop(
+0,
+"rgba(255,255,255,.08)"
+);
+
+glow.addColorStop(
+1,
+"rgba(255,255,255,0)"
+);
+
+ctx.fillStyle=glow;
+
+ctx.beginPath();
+
+ctx.arc(
+cx,
+cy,
+r*1.2,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+/* ===== SNAP ===== */
 
 function snap(a){
-let i=Math.round((a-OFFSET)/STEP);
+
+let i=
+Math.round(
+(a-OFFSET)/STEP
+);
+
 return i*STEP+OFFSET+STEP/2;
+
 }
+
+/* ===== HUE ===== */
 
 function getHue(a){
-return ((a-OFFSET)*180/Math.PI)%360;
+
+return ((((a-OFFSET)*180/Math.PI)%360)+360)%360;
+
 }
+
+/* ===== ANGLES ===== */
 
 function getAngles(base){
-if(mode===2)return[base,base+Math.PI];
-if(mode===3)return[base,base+2*Math.PI/3,base+4*Math.PI/3];
-if(mode===4)return[base,base+Math.PI/2,base+Math.PI,base+3*Math.PI/2];
+
+if(mode===2)
+return[
+base,
+base+Math.PI
+];
+
+if(mode===3)
+return[
+base,
+base+2*Math.PI/3,
+base+4*Math.PI/3
+];
+
+if(mode===4)
+return[
+base,
+base+Math.PI/2,
+base+Math.PI,
+base+3*Math.PI/2
+];
+
 }
+
+/* ===== SHAPE ===== */
 
 function drawShape(p){
-ctx.lineWidth=3;
-ctx.strokeStyle="#000";
+
+ctx.lineWidth=4;
+
+ctx.strokeStyle=
+"rgba(255,255,255,.6)";
+
+ctx.shadowBlur=20;
+
+ctx.shadowColor=
+"rgba(255,255,255,.2)";
+
 ctx.beginPath();
-ctx.moveTo(p[0].x,p[0].y);
-for(let i=1;i<p.length;i++)ctx.lineTo(p[i].x,p[i].y);
-if(p.length>2)ctx.closePath();
-ctx.stroke();
+
+ctx.moveTo(
+p[0].x,
+p[0].y
+);
+
+for(let i=1;i<p.length;i++){
+
+ctx.lineTo(
+p[i].x,
+p[i].y
+);
+
 }
+
+if(p.length>2)
+ctx.closePath();
+
+ctx.stroke();
+
+ctx.shadowBlur=0;
+
+}
+
+/* ===== POINTS ===== */
 
 function drawPoints(p){
+
 p.forEach(pt=>{
+
 ctx.beginPath();
-ctx.arc(pt.x,pt.y,10,0,Math.PI*2);
-ctx.fillStyle=`hsl(${getHue(pt.a)},100%,50%)`;
+
+ctx.arc(
+pt.x,
+pt.y,
+13,
+0,
+Math.PI*2
+);
+
+ctx.fillStyle=
+`hsl(${getHue(pt.a)},100%,50%)`;
+
+ctx.shadowBlur=25;
+
+ctx.shadowColor=
+`hsl(${getHue(pt.a)},100%,50%)`;
+
 ctx.fill();
+
+ctx.lineWidth=3;
+
+ctx.strokeStyle=
+"rgba(255,255,255,.7)";
+
 ctx.stroke();
+
+ctx.shadowBlur=0;
+
 });
+
 }
 
+/* ===== HSL TO HEX ===== */
+
 function hslToHex(h,s,l){
-s/=100;l/=100;
-let c=(1-Math.abs(2*l-1))*s;
-let x=c*(1-Math.abs((h/60)%2-1));
+
+h=((h%360)+360)%360;
+s/=100;
+l/=100;
+
+let c=
+(1-Math.abs(2*l-1))*s;
+
+let x=
+c*(1-Math.abs((h/60)%2-1));
+
 let m=l-c/2;
+
 let r=0,g=0,b=0;
+
 if(h<60){r=c;g=x}
 else if(h<120){r=x;g=c}
 else if(h<180){g=c;b=x}
 else if(h<240){g=x;b=c}
 else if(h<300){r=x;b=c}
 else{r=c;b=x}
+
 r=Math.round((r+m)*255);
 g=Math.round((g+m)*255);
 b=Math.round((b+m)*255);
-return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+
+return "#"+
+((1<<24)+(r<<16)+(g<<8)+b)
+.toString(16)
+.slice(1);
+
 }
 
-/* visor */
+/* ===== VIEWER ===== */
+
 function setViewer(hex){
-let colorEl=document.getElementById("viewerColor");
-let hexEl=document.getElementById("viewerHex");
+
+let colorEl=
+document.getElementById(
+"viewerColor"
+);
+
+let hexEl=
+document.getElementById(
+"viewerHex"
+);
 
 colorEl.style.background=hex;
+
 hexEl.innerText=hex;
 
-/* copiar al hacer click */
 hexEl.onclick=()=>{
-if(navigator.clipboard){
+
 navigator.clipboard.writeText(hex);
-}else{
-let t=document.createElement("textarea");
-t.value=hex;
-document.body.appendChild(t);
-t.select();
-document.execCommand("copy");
-document.body.removeChild(t);
-}
+
+hexEl.style.transform=
+"scale(1.08)";
+
+setTimeout(()=>{
+
+hexEl.style.transform=
+"scale(1)";
+
+},140);
+
 };
+
 }
+
+/* ===== PREVIEW ===== */
 
 function updatePreview(){
+
 if(lastAngle===angle)return;
 
-let preview=document.getElementById("preview");
+let preview=
+document.getElementById(
+"preview"
+);
+
 preview.innerHTML="";
 
 getAngles(angle).forEach(a=>{
-let hex=hslToHex(getHue(a),100,50);
 
-let div=document.createElement("div");
+let hex=
+hslToHex(
+getHue(a),
+100,
+50
+);
+
+let div=
+document.createElement("div");
+
 div.className="colorBox";
+
 div.style.background=hex;
 
 div.onclick=()=>setViewer(hex);
 
 preview.appendChild(div);
+
 });
+
 }
 
+/* ===== VARIATIONS ===== */
+
 function updateVariations(){
+
 if(lastAngle===angle)return;
 
-let cont=document.getElementById("variations");
+let cont=
+document.getElementById(
+"variations"
+);
+
 cont.innerHTML="";
 
 getAngles(angle).forEach(a=>{
+
 let h=getHue(a);
 
-let row=document.createElement("div");
+let row=
+document.createElement("div");
+
 row.className="varRow";
 
-/* 🔥 MUCHAS MÁS VARIACIONES */
 let variants=[
-/* base */
+
 [h,100,50],
 
-/* sombras */
 [h,100,30],
 [h,100,20],
 
-/* luces */
 [h,100,70],
 [h,100,85],
 
-/* saturación */
 [h,70,50],
 [h,40,50],
 
-/* desplazamiento de tono */
 [(h+15)%360,100,50],
 [(h-15+360)%360,100,50]
 
 ];
 
 variants.forEach(v=>{
-let hex=hslToHex(v[0],v[1],v[2]);
 
-let div=document.createElement("div");
+let hex=
+hslToHex(
+v[0],
+v[1],
+v[2]
+);
+
+let div=
+document.createElement("div");
+
 div.className="varColor";
+
 div.style.background=hex;
 
-/* sigue funcionando el visor */
 div.onclick=()=>setViewer(hex);
 
 row.appendChild(div);
+
 });
 
 cont.appendChild(row);
+
 });
 
 lastAngle=angle;
+
 }
+
+/* ===== DRAG ===== */
 
 let dragging=false;
 
-canvas.addEventListener("mousedown",e=>{dragging=true;move(e);});
-canvas.addEventListener("mouseup",()=>dragging=false);
-canvas.addEventListener("mouseleave",()=>dragging=false);
-canvas.addEventListener("mousemove",e=>{if(dragging)move(e);});
+canvas.addEventListener(
+"mousedown",
+e=>{
+
+dragging=true;
+
+move(e);
+
+}
+);
+
+canvas.addEventListener(
+"mouseup",
+()=>dragging=false
+);
+
+canvas.addEventListener(
+"mouseleave",
+()=>dragging=false
+);
+
+canvas.addEventListener(
+"mousemove",
+e=>{
+
+if(dragging)
+move(e);
+
+}
+);
 
 function move(e){
-let rect=canvas.getBoundingClientRect();
-let x=e.clientX-rect.left-cx;
-let y=e.clientY-rect.top-cy;
-let dist=Math.sqrt(x*x+y*y);
-if(dist<r*INTERACTION_RADIUS_FACTOR){
-angle=snap(Math.atan2(y,x));
+
+let rect=
+canvas.getBoundingClientRect();
+
+let x=
+e.clientX-rect.left-cx;
+
+let y=
+e.clientY-rect.top-cy;
+
+let dist=
+Math.sqrt(x*x+y*y);
+
+if(
+dist<
+r*INTERACTION_RADIUS_FACTOR
+){
+
+let a=Math.atan2(y,x);
+if(a<0)a+=Math.PI*2;
+angle=snap(a);
+
 }
+
 }
+
+/* ===== MODE ===== */
 
 function setMode(m,btn){
+
 mode=m;
-document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+
+document
+.querySelectorAll("button")
+.forEach(
+b=>b.classList.remove("active")
+);
+
 btn.classList.add("active");
+
 lastAngle=null;
+
 }
+
+/* ===== THEME ===== */
 
 function toggleTheme(){
-document.body.classList.toggle("dark");
-document.body.classList.toggle("light");
+
+document.body.classList.toggle(
+"dark"
+);
+
+document.body.classList.toggle(
+"light"
+);
+
 }
 
+/* ===== START ===== */
+
 animate();
+
 </script>
 
 </body>
